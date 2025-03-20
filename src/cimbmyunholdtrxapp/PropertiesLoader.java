@@ -20,7 +20,11 @@ import java.security.spec.InvalidKeySpecException;
 
 public class PropertiesLoader {
     public final String host;
-    public final String url;
+    //cr ngc
+    //public final String url;
+    public final String clicks_unhold_url;
+    public final String ngc_unhold_url;
+    //end of cr ngc
     
     //database properties
     public final String db_host;
@@ -28,6 +32,7 @@ public class PropertiesLoader {
     public final String db_name;
     public final String db_username;
     public final String db_password;
+    public final String db_connection_driver;
     
     private static final String UNICODE_FORMAT = "UTF8";
     public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
@@ -37,6 +42,8 @@ public class PropertiesLoader {
     byte[] arrayBytes;
     private String myEncryptionKey;
     private String myEncryptionScheme;
+    //public final String log_file_dir;
+    public final String unhold_log_file_dir;
     SecretKey key;
     
     public final String decrypt(String encryptedString) {
@@ -75,7 +82,7 @@ public class PropertiesLoader {
         
         
         
-        String prop_location = "D:/ACTIMIZE/Batch/app.properties";
+        String prop_location = "Z:/ACTIMIZE/Batch/app.properties";
         Properties prop = new Properties();
         
         InputStream input = null;
@@ -87,13 +94,24 @@ public class PropertiesLoader {
         }
         
         host = prop.getProperty("host");
-        url = prop.getProperty("url");
+        
+        //cr ngc
+//        url = prop.getProperty("url");
+        clicks_unhold_url = prop.getProperty("clicks_unhold_url");
+        ngc_unhold_url = prop.getProperty("ngc_unhold_url");
+        
+        //end of cr ngc
         
         db_host = prop.getProperty("db_host");
         db_port = prop.getProperty("db_port");
         db_name = prop.getProperty("db_name");
         db_username = prop.getProperty("db_username");
-        //db_password = prop.getProperty("db_password");
         db_password = decrypt(prop.getProperty("db_password"));
+        //db_password = "123456";
+        db_connection_driver = prop.getProperty("db_connection_driver");
+        //log_file_dir = prop.getProperty("LOG_FILE_DIR");
+        //unhold_log_file_dir = prop.getProperty("UNHOLD_LOG_FILE_DIR");
+        unhold_log_file_dir = prop.getProperty("LOG_FILE_DIR");
+
     }
 }
