@@ -1,0 +1,65 @@
+{"Response": {
+    "xsi:noNamespaceSchemaLocation": "FF_bulkPaymentsResponseMessage_V1.xsd",
+    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+    "BulkPayment": {
+        "detectionStatus": "success",
+        "EntriesActions": {
+            "mostSevereRiskLevel": "High",
+            "EntryAction": [
+                {
+                    "entryActionName": "riskLevel",
+                    "mostSevereValue": "High"
+                },
+                {
+                    "entryActionName": "sendSMS",
+                    "mostSevereValue": "yes"
+                }
+            ]
+        },
+        "logicalInputFileCreationDateTime": "2014-06-17 09:04:00",
+        "invalidEntriesCount": 0,
+        "BulkPaymentActions": {
+            "isAlertGenerated": 1,
+            "response": "block",
+            "BulkPaymentAction": [
+                {
+                    "bulkPaymentActionName": "response",
+                    "bulkPaymentActionValue": "block"
+                },
+                {
+                    "bulkPaymentActionName": "sendSMS",
+                    "bulkPaymentActionValue": "yes"
+                }
+            ]
+        },
+        "numberOfSuccessfullyDetectedEntries": 5,
+        "batchId": 33333,
+        "BulkPaymentVersionIdentityFieldsList": {"VersionIdentityField": [
+            {
+                "versionIdentityFieldValue": 111111,
+                "versionIdentityFieldName": "transactionKey"
+            },
+            {
+                "transactionIdentityFieldValue": "2014-06-17 09:04:00",
+                "versionIdentityFieldName": "transactionNormalizedDateTime"
+            }
+        ]},
+        "logicalFileSequenceId": 54536565,
+        "EntriesResults": {
+            "maxActimizeTransactionRiskScore": 100,
+            "maxUserAnalyticsScore": ""
+        },
+        "filename": "bulkPaymentXML_170614.xml",
+        "numberOfFailedDetectedEntries": 0,
+        "BulkPaymentResults": {
+            "actimizeAnalyticsRiskScore": 100,
+            "userAnalyticsScore": ""
+        },
+        "validEntriesCount": 5,
+        "transactionKey": 111111,
+        "BulkPaymentTransactionIdentityFieldsList": {"TransactionIdentityField": {
+            "transactionIdentityFieldValue": 111111,
+            "transactionIdentityFieldName": "transactionKey"
+        }}
+    }
+}}
