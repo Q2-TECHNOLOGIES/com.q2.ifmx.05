@@ -20,13 +20,13 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
 
 public class XMLtoJSON {
-    private static final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-    private static final Logger logger = loggerContext.getLogger("XMLtoJSON");
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+    public static final Logger logger = loggerContext.getLogger("XMLtoJSON");
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) {
         // Configure logging directory
-        String logDirectory = "C:\\Users\\fzulf\\Desktop\\New folder";
+        String logDirectory = "/opt/actimize/bulk_payment/xml/response";
         String logFile = logDirectory + "/xmltojson.log";
         
         // Ensure directory exists
@@ -97,19 +97,12 @@ public class XMLtoJSON {
         logger.debug("XML input length: {} characters", xmlString.length());
         logger.info("Target endpoint: {}", endpointUrl);
 
-        try {
-            // Conversion Process
-            logger.info("Starting XML to JSON conversion");
-            JSONObject jsonObj = XML.toJSONObject(xmlString);
-            logger.info("Conversion successful");
-            logger.debug("JSON output length: {} characters", jsonObj.toString().length());
-            
-            // HTTP Post
-            postJsonToEndpoint(jsonObj.toString(), endpointUrl);
+      try {
 
-        } catch (JSONException e) {
-            logger.error("XML parsing failed: {}", e.getMessage(), e);
-            logger.error("Failed XML snippet: {}", xmlString.substring(0, Math.min(xmlString.length(), 100)));
+            String jsonPayload = convertXmlToJson(xmlString);
+            if (jsonPayload != null) {
+                postJsonToEndpoint(jsonPayload, endpointUrl);
+            }
         } finally {
             long duration = System.currentTimeMillis() - startTime;
             logger.info("----------------PROCESS COMPLETED----------------");
@@ -118,8 +111,23 @@ public class XMLtoJSON {
                 (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
         }
     }
+    
+        public static String convertXmlToJson(String xmlString) {
+        logger.info("Starting XML to JSON conversion");
+        try {
+            JSONObject jsonObj = XML.toJSONObject(xmlString);
+            String jsonString = jsonObj.toString();
+            logger.info("Conversion successful");
+            logger.debug("JSON output length: {} characters", jsonString.length());
+            return jsonString;
+        } catch (JSONException e) {
+            logger.error("XML parsing failed: {}", e.getMessage(), e);
+            logger.error("Failed XML snippet: {}", xmlString.substring(0, Math.min(xmlString.length(), 100)));
+            return null;
+        }
+    }
 
-    private static void postJsonToEndpoint(String jsonPayload, String endpointUrl) {
+    public static String postJsonToEndpoint(String jsonPayload, String endpointUrl) {
         logger.info("Initializing HTTP POST request to {}", endpointUrl);
         logger.debug("Request payload size: {} bytes", jsonPayload.length());
         logger.info("Converted JSON payload:\n{}", formatJson(jsonPayload));
@@ -143,6 +151,7 @@ public class XMLtoJSON {
             logger.info("Status Code: {}", response.statusCode());
             logger.debug("Response Headers: {}", response.headers().map());
             logger.info("Response Body Length: {} bytes", response.body().length());
+            return response.body(); // Mengembalikan response body
 
         } catch (IOException e) {
             logger.error("Network error occurred: {}", e.getMessage(), e);
@@ -150,8 +159,9 @@ public class XMLtoJSON {
             logger.error("Process interrupted: {}", e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
+        return null;
     }
-    private static String formatJson(String jsonString) {
+    public static String formatJson(String jsonString) {
     try {
         JSONObject jsonObject = new JSONObject(jsonString);
         return jsonObject.toString(4); 
