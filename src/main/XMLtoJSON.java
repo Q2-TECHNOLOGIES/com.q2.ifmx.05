@@ -9,6 +9,10 @@ import java.net.http.HttpResponse;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Random;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -41,29 +45,29 @@ public class XMLtoJSON {
                 logger.error("Input validation failed: No XML string provided");
                 System.exit(1);
             }
-        String xmlString = """
-                           <Response xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FF_bulkPaymentsResponseMessage_V1.xsd">
-                           <BulkPayment detectionStatus="success" filename="bulkPaymentXML_170614.xml" transactionKey="111111" batchId="33333" logicalInputFileCreationDateTime="2014-06-17 09:04:00" logicalFileSequenceId="54536565" validEntriesCount="5" invalidEntriesCount="0" numberOfSuccessfullyDetectedEntries="5" numberOfFailedDetectedEntries="0">
-                           <BulkPaymentTransactionIdentityFieldsList>
-                           <TransactionIdentityField transactionIdentityFieldName="transactionKey" transactionIdentityFieldValue="111111"/>
-                           </BulkPaymentTransactionIdentityFieldsList>
-                           <BulkPaymentVersionIdentityFieldsList>
-                           <VersionIdentityField versionIdentityFieldName="transactionKey" versionIdentityFieldValue="111111"/>
-                           <VersionIdentityField versionIdentityFieldName="transactionNormalizedDateTime" versionIdentityFieldValue="2014-06-17 09:04:00"/>
-                           </BulkPaymentVersionIdentityFieldsList>
-                           <BulkPaymentActions isAlertGenerated="1" response="block">
-                           <BulkPaymentAction bulkPaymentActionName="response" bulkPaymentActionValue="block"/>
-                           <BulkPaymentAction bulkPaymentActionName="sendSMS" bulkPaymentActionValue="yes"/>
-                           </BulkPaymentActions>
-                           <BulkPaymentResults actimizeAnalyticsRiskScore="100" userAnalyticsScore=""/>
-                           <EntriesResults maxActimizeTransactionRiskScore="100" maxUserAnalyticsScore=""/>
-                           <EntriesActions mostSevereRiskLevel="High">
-                           <EntryAction entryActionName="riskLevel" mostSevereValue="High"/>
-                           <EntryAction entryActionName="sendSMS" mostSevereValue="yes"/>
-                           </EntriesActions>
-                           </BulkPayment>
-                           </Response>""";
-//            String xmlString = args[0];
+            String xmlString = args[0];
+//              String xmlString = """
+//                           <Response xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FF_bulkPaymentsResponseMessage_V1.xsd">
+//                           <BulkPayment detectionStatus="success" filename="bulkPaymentXML_170614.xml" transactionKey="111111" batchId="33333" logicalInputFileCreationDateTime="2014-06-17 09:04:00" logicalFileSequenceId="54536565" validEntriesCount="5" invalidEntriesCount="0" numberOfSuccessfullyDetectedEntries="5" numberOfFailedDetectedEntries="0">
+//                           <BulkPaymentTransactionIdentityFieldsList>
+//                           <TransactionIdentityField transactionIdentityFieldName="transactionKey" transactionIdentityFieldValue="111111"/>
+//                           </BulkPaymentTransactionIdentityFieldsList>
+//                           <BulkPaymentVersionIdentityFieldsList>
+//                           <VersionIdentityField versionIdentityFieldName="transactionKey" versionIdentityFieldValue="111111"/>
+//                           <VersionIdentityField versionIdentityFieldName="transactionNormalizedDateTime" versionIdentityFieldValue="2014-06-17 09:04:00"/>
+//                           </BulkPaymentVersionIdentityFieldsList>
+//                           <BulkPaymentActions isAlertGenerated="1" response="block">
+//                           <BulkPaymentAction bulkPaymentActionName="response" bulkPaymentActionValue="block"/>
+//                           <BulkPaymentAction bulkPaymentActionName="sendSMS" bulkPaymentActionValue="yes"/>
+//                           </BulkPaymentActions>
+//                           <BulkPaymentResults actimizeAnalyticsRiskScore="100" userAnalyticsScore=""/>
+//                           <EntriesResults maxActimizeTransactionRiskScore="100" maxUserAnalyticsScore=""/>
+//                           <EntriesActions mostSevereRiskLevel="High">
+//                           <EntryAction entryActionName="riskLevel" mostSevereValue="High"/>
+//                           <EntryAction entryActionName="sendSMS" mostSevereValue="yes"/>
+//                           </EntriesActions>
+//                           </BulkPayment>
+//                           </Response>""";
             logger.info("Input parameters validated");
             logger.debug("XML input length: {} characters", xmlString.length());
 
@@ -74,28 +78,118 @@ public class XMLtoJSON {
             System.exit(1);
         }
     }
-        public static void convertXmlToJson(String xmlString, PropertiesLoader pl) {
+    public static JSONObject convertXmlToJson(String xmlString, PropertiesLoader pl) {
         logger.info("Starting XML to JSON conversion");
         try {
-            String endpointUrl = pl.endpoint_URL; // Using property from PropertiesLoader
-            System.out.println("Loaded endpoint_URL: " + endpointUrl); // Temporary debug
-            if (endpointUrl == null || endpointUrl.isEmpty()) {
-            logger.error("Endpoint URL is not configured in properties file");
-            return;
-        }
             JSONObject jsonObj = XML.toJSONObject(xmlString);
-            String jsonString = jsonObj.toString();
+            JSONObject bulkPayment = jsonObj.getJSONObject("Response").getJSONObject("BulkPayment");
+
+        // Create ordered JSON object using LinkedHashMap
+        JSONObject outputJson = new JSONObject(new LinkedHashMap<>());
+        // Map all direct attributes with safe value handling
+        outputJson.put("batchId", safeGetString(bulkPayment, "batchId"));
+        outputJson.put("transactionKey", safeGetString(bulkPayment, "transactionKey"));
+        outputJson.put("detectionStatus", safeGetString(bulkPayment, "detectionStatus"));
+        String originalFilename = safeGetString(bulkPayment, "filename");
+        String csvFilename = originalFilename.replaceAll("(?i)\\.xml$", ".csv");
+        outputJson.put("filename", csvFilename);
+        outputJson.put("logicalInputFileCreationDateTime", safeGetString(bulkPayment, "logicalInputFileCreationDateTime"));
+        outputJson.put("logicalFileSequenceId", safeGetString(bulkPayment, "logicalFileSequenceId"));
+        outputJson.put("validEntriesCount", safeGetString(bulkPayment, "validEntriesCount"));
+        outputJson.put("invalidEntriesCount", safeGetString(bulkPayment, "invalidEntriesCount"));
+        outputJson.put("numberOfSuccessfullyDetectedEntries", safeGetString(bulkPayment, "numberOfSuccessfullyDetectedEntries"));
+        outputJson.put("numberOfFailedDetectedEntries", safeGetString(bulkPayment, "numberOfFailedDetectedEntries"));
+        
+        // Process transactionNormalizedDateTime from VersionIdentityField
+        JSONObject versionFields = bulkPayment.getJSONObject("BulkPaymentVersionIdentityFieldsList");
+        JSONArray versionFieldsArray = versionFields.getJSONArray("VersionIdentityField");
+        for (int i = 0; i < versionFieldsArray.length(); i++) {
+            JSONObject field = versionFieldsArray.getJSONObject(i);
+            if (safeGetString(field, "versionIdentityFieldName").equals("transactionNormalizedDateTime")) {
+                outputJson.put("transactionNormalizedDateTime", safeGetString(field, "versionIdentityFieldValue"));
+                break;
+            }
+        }
+            
+        // Process BulkPaymentActions
+        JSONObject bulkPaymentActions = bulkPayment.getJSONObject("BulkPaymentActions");
+        JSONObject actionsOutput = new JSONObject();
+        actionsOutput.put("isAlertGenerated", safeGetString(bulkPaymentActions, "isAlertGenerated"));
+        actionsOutput.put("response", safeGetString(bulkPaymentActions, "response"));
+        
+        JSONArray actionArray = new JSONArray();
+        if (bulkPaymentActions.get("BulkPaymentAction") instanceof JSONArray) {
+            JSONArray actions = bulkPaymentActions.getJSONArray("BulkPaymentAction");
+            for (int i = 0; i < actions.length(); i++) {
+                JSONObject action = actions.getJSONObject(i);
+                actionArray.put(new JSONObject()
+                    .put("bulkPaymentActionName", safeGetString(action, "bulkPaymentActionName"))
+                    .put("bulkPaymentActionValue", safeGetString(action, "bulkPaymentActionValue")));
+            }
+        } else {
+            JSONObject action = bulkPaymentActions.getJSONObject("BulkPaymentAction");
+            actionArray.put(new JSONObject()
+                .put("bulkPaymentActionName", safeGetString(action, "bulkPaymentActionName"))
+                .put("bulkPaymentActionValue", safeGetString(action, "bulkPaymentActionValue")));
+        }
+        actionsOutput.put("BulkPaymentAction", actionArray);
+        outputJson.put("BulkPaymentActions", actionsOutput);
+        
+        // Process BulkPaymentResults
+        JSONObject bulkPaymentResults = bulkPayment.getJSONObject("BulkPaymentResults");
+        JSONObject resultsOutput = new JSONObject();
+        resultsOutput.put("actimizeAnalyticsRiskScore", safeGetString(bulkPaymentResults, "actimizeAnalyticsRiskScore"));
+        resultsOutput.put("userAnalyticsScore", safeGetString(bulkPaymentResults, "userAnalyticsScore"));
+        outputJson.put("BulkPaymentResults", resultsOutput);
+        
+        // Process EntriesResults
+        JSONObject entriesResults = bulkPayment.getJSONObject("EntriesResults");
+        JSONObject entriesResultsOutput = new JSONObject();
+        entriesResultsOutput.put("maxActimizeTransactionRiskScore", safeGetString(entriesResults, "maxActimizeTransactionRiskScore"));
+        entriesResultsOutput.put("maxUserAnalyticsScore", safeGetString(entriesResults, "maxUserAnalyticsScore"));
+        outputJson.put("EntriesResults", entriesResultsOutput);
+        
+        // Process EntriesActions
+        JSONObject entriesActions = bulkPayment.getJSONObject("EntriesActions");
+        JSONObject entriesActionsOutput = new JSONObject();
+        entriesActionsOutput.put("mostSevereRiskLevel", safeGetString(entriesActions, "mostSevereRiskLevel"));
+        
+        if (entriesActions.has("EntryAction")) {
+            JSONArray entryActionsArray = new JSONArray();
+            if (entriesActions.get("EntryAction") instanceof JSONArray) {
+                JSONArray actions = entriesActions.getJSONArray("EntryAction");
+                for (int i = 0; i < actions.length(); i++) {
+                    JSONObject action = actions.getJSONObject(i);
+                    entryActionsArray.put(new JSONObject()
+                        .put("entryActionName", safeGetString(action, "entryActionName"))
+                        .put("mostSevereValue", safeGetString(action, "mostSevereValue")));
+                }
+            } else {
+                JSONObject action = entriesActions.getJSONObject("EntryAction");
+                entryActionsArray.put(new JSONObject()
+                    .put("entryActionName", safeGetString(action, "entryActionName"))
+                    .put("mostSevereValue", safeGetString(action, "mostSevereValue")));
+            }
+            entriesActionsOutput.put("EntryAction", entryActionsArray);
+        }
+        outputJson.put("EntriesActions", entriesActionsOutput);
+            
+        Random rand = new Random();
+        int randomAuditNo = 100000 + rand.nextInt(900000); 
+        outputJson.put("auditNo", String.valueOf(randomAuditNo));   
+
             logger.info("Conversion successful");
-            logger.debug("JSON output length: {} characters", jsonString.length());
-            postJsonToEndpoint(jsonString,endpointUrl);
-            // return jsonString;
+            logger.debug("Final JSON output: {}", outputJson.toString(4));
+            return outputJson;
+
         } catch (JSONException e) {
             logger.error("XML parsing failed: {}", e.getMessage(), e);
-            // logger.error("Failed XML snippet: {}", xmlString.substring(0, Math.min(xmlString.length(), 100)));
-            // return null;
+            return null;
+        } catch (Exception e) {
+            logger.error("Unexpected error during conversion: {}", e.getMessage(), e);
+            return null;
         }
     }
-
     public static void postJsonToEndpoint(String jsonPayload,String endpointUrl) {
 //        logger.info("Initializing HTTP POST request to {}", endpointUrl);
 //        logger.debug("Request payload size: {} bytes", jsonPayload.length());
@@ -145,4 +239,23 @@ public class XMLtoJSON {
             (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
         logger.info("----------------PROCESS COMPLETED----------------");
     }
+    private static String safeGetString(JSONObject obj, String key) {
+    try {
+        if (obj.has(key)) {
+            Object value = obj.get(key);
+            if (value instanceof String) {
+                return (String) value;
+            } else if (value instanceof Number) {
+                return value.toString();
+            } else if (value instanceof Boolean) {
+                return value.toString();
+            }
+            return value != null ? value.toString() : "";
+        }
+        return "";
+    } catch (JSONException e) {
+        logger.warn("Failed to get value for key {}: {}", key, e.getMessage());
+        return "";
+    }
+}
 }
