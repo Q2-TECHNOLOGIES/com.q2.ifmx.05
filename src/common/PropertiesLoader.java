@@ -21,7 +21,7 @@ public class PropertiesLoader {
     public final String path_file_backup;
     public final String path_file_error;
     public final String path_file_input;
-    public final String path_file_output;
+    public final String endpoint_URL;
     public final String path_file_logs;
     
     public final String file_log_name;
@@ -51,7 +51,7 @@ public class PropertiesLoader {
         path_file_backup  = prop.getProperty("path_file_backup");
         path_file_error = prop.getProperty("path_file_error");
         path_file_input = prop.getProperty("path_file_input");
-        path_file_output = prop.getProperty("path_file_output");
+        endpoint_URL = prop.getProperty("endpoint_URL");
         path_file_logs = prop.getProperty("path_file_logs");
         
         

@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Z:/Zulfah/Work/Q2/Client/CIMB%20MY/02062025/XMLtoJSON/src/xmltojson/XMLtoJSON.java</file>
-            <file>file:/Z:/Zulfah/Work/Q2/Client/CIMB%20MY/02062025/XMLtoJSON/build.xml</file>
-            <file>file:/Z:/Zulfah/Work/Q2/Client/CIMB%20MY/02062025/XMLtoJSON/src/common/Logging.java</file>
-            <file>file:/Z:/Zulfah/Work/Q2/Client/CIMB%20MY/02062025/XMLtoJSON/src/common/PropertiesLoader.java</file>
+            <file>file:/Z:/Zulfah/Work/Q2/Client/CIMB%20MY/02062025/CIMBMY_ConvertCSVtoJSON/src/main/XMLtoJSON.java</file>
+            <file>file:/Z:/Zulfah/Work/Q2/Client/CIMB%20MY/02062025/CIMBMY_ConvertCSVtoJSON/src/common/PropertiesLoader.java</file>
+            <file>file:/Z:/Zulfah/Work/Q2/Client/CIMB%20MY/02062025/CIMBMY_ConvertCSVtoJSON/src/main/resources/config.properties</file>
         </group>
     </open-files>
 </project-private>
