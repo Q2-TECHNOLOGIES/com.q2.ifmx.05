@@ -1,0 +1,220 @@
+2025-07-22 16:53:04-INFO -XMLtoJSON :----------------XML TO JSON CONVERSION STARTED----------------
+2025-07-22 16:53:04-INFO -XMLtoJSON :Process started at 2025-07-22 16:53:04
+2025-07-22 16:53:04-INFO -XMLtoJSON :Input parameters validated
+2025-07-22 16:53:04-DEBUG-XMLtoJSON :XML input length: 1592 characters
+2025-07-22 16:53:04-INFO -XMLtoJSON :Starting XML to JSON conversion
+2025-07-22 16:53:04-INFO -XMLtoJSON :Conversion successful
+2025-07-22 16:53:04-DEBUG-XMLtoJSON :Final JSON output: {
+    "detectionStatus": "success",
+    "EntriesActions": {
+        "mostSevereRiskLevel": "High",
+        "EntryAction": [
+            {
+                "entryActionName": "riskLevel",
+                "mostSevereValue": "High"
+            },
+            {
+                "entryActionName": "sendSMS",
+                "mostSevereValue": "yes"
+            }
+        ]
+    },
+    "logicalInputFileCreationDateTime": "2014-06-17 09:04:00",
+    "invalidEntriesCount": "0",
+    "BulkPaymentActions": {
+        "isAlertGenerated": "1",
+        "response": "block",
+        "BulkPaymentAction": [
+            {
+                "bulkPaymentActionName": "response",
+                "bulkPaymentActionValue": "block"
+            },
+            {
+                "bulkPaymentActionName": "sendSMS",
+                "bulkPaymentActionValue": "yes"
+            }
+        ]
+    },
+    "auditNo": "708316",
+    "numberOfSuccessfullyDetectedEntries": "5",
+    "batchId": "33333",
+    "logicalFileSequenceId": "54536565",
+    "transactionNormalizedDateTime": "2014-06-17 09:04:00",
+    "EntriesResults": {
+        "maxActimizeTransactionRiskScore": "100",
+        "maxUserAnalyticsScore": ""
+    },
+    "filename": "bulkPaymentXML_170614.csv",
+    "numberOfFailedDetectedEntries": "0",
+    "BulkPaymentResults": {
+        "actimizeAnalyticsRiskScore": "100",
+        "userAnalyticsScore": ""
+    },
+    "validEntriesCount": "5",
+    "transactionKey": "111111"
+}
+2025-07-22 16:53:04-INFO -XMLtoJSON :Execution time: 10 ms
+2025-07-22 16:53:04-INFO -XMLtoJSON :Memory used: 9 MB
+2025-07-22 16:53:04-INFO -XMLtoJSON :----------------PROCESS COMPLETED----------------
+2025-07-22 16:57:36-INFO -XMLtoJSON :----------------XML TO JSON CONVERSION STARTED----------------
+2025-07-22 16:57:36-INFO -XMLtoJSON :Process started at 2025-07-22 16:57:36
+2025-07-22 16:57:36-INFO -XMLtoJSON :Input parameters validated
+2025-07-22 16:57:36-DEBUG-XMLtoJSON :XML input length: 1592 characters
+2025-07-22 16:57:36-INFO -XMLtoJSON :Starting XML to JSON conversion
+2025-07-22 16:57:36-INFO -XMLtoJSON :Conversion successful
+2025-07-22 16:57:36-DEBUG-XMLtoJSON :Final JSON output: {
+    "detectionStatus": "success",
+    "EntriesActions": {
+        "mostSevereRiskLevel": "High",
+        "EntryAction": [
+            {
+                "entryActionName": "riskLevel",
+                "mostSevereValue": "High"
+            },
+            {
+                "entryActionName": "sendSMS",
+                "mostSevereValue": "yes"
+            }
+        ]
+    },
+    "logicalInputFileCreationDateTime": "2014-06-17 09:04:00",
+    "invalidEntriesCount": "0",
+    "BulkPaymentActions": {
+        "isAlertGenerated": "1",
+        "response": "block",
+        "BulkPaymentAction": [
+            {
+                "bulkPaymentActionName": "response",
+                "bulkPaymentActionValue": "block"
+            },
+            {
+                "bulkPaymentActionName": "sendSMS",
+                "bulkPaymentActionValue": "yes"
+            }
+        ]
+    },
+    "auditNo": "489109",
+    "numberOfSuccessfullyDetectedEntries": "5",
+    "batchId": "33333",
+    "logicalFileSequenceId": "54536565",
+    "transactionNormalizedDateTime": "2014-06-17 09:04:00",
+    "EntriesResults": {
+        "maxActimizeTransactionRiskScore": "100",
+        "maxUserAnalyticsScore": ""
+    },
+    "filename": "bulkPaymentXML_170614.csv",
+    "numberOfFailedDetectedEntries": "0",
+    "BulkPaymentResults": {
+        "actimizeAnalyticsRiskScore": "100",
+        "userAnalyticsScore": ""
+    },
+    "validEntriesCount": "5",
+    "transactionKey": "111111"
+}
+2025-07-22 16:57:36-INFO -XMLtoJSON :Execution time: 12 ms
+2025-07-22 16:57:36-INFO -XMLtoJSON :Memory used: 10 MB
+2025-07-22 16:57:36-INFO -XMLtoJSON :----------------PROCESS COMPLETED----------------
+2025-07-22 17:01:27-INFO -XMLtoJSON :----------------XML TO JSON CONVERSION STARTED----------------
+2025-07-22 17:01:27-INFO -XMLtoJSON :Process started at 2025-07-22 17:01:27
+2025-07-22 17:01:27-INFO -XMLtoJSON :Conversion successful
+2025-07-22 17:01:27-DEBUG-XMLtoJSON :Final JSON output: {
+    "detectionStatus": "success",
+    "EntriesActions": {
+        "mostSevereRiskLevel": "High",
+        "EntryAction": [
+            {
+                "entryActionName": "riskLevel",
+                "mostSevereValue": "High"
+            },
+            {
+                "entryActionName": "sendSMS",
+                "mostSevereValue": "yes"
+            }
+        ]
+    },
+    "logicalInputFileCreationDateTime": "2014-06-17 09:04:00",
+    "invalidEntriesCount": "0",
+    "BulkPaymentActions": {
+        "isAlertGenerated": "1",
+        "response": "block",
+        "BulkPaymentAction": [
+            {
+                "bulkPaymentActionName": "response",
+                "bulkPaymentActionValue": "block"
+            },
+            {
+                "bulkPaymentActionName": "sendSMS",
+                "bulkPaymentActionValue": "yes"
+            }
+        ]
+    },
+    "auditNo": "594324",
+    "numberOfSuccessfullyDetectedEntries": "5",
+    "batchId": "33333",
+    "logicalFileSequenceId": "54536565",
+    "transactionNormalizedDateTime": "2014-06-17 09:04:00",
+    "EntriesResults": {
+        "maxActimizeTransactionRiskScore": "100",
+        "maxUserAnalyticsScore": ""
+    },
+    "filename": "bulkPaymentXML_170614.csv",
+    "numberOfFailedDetectedEntries": "0",
+    "BulkPaymentResults": {
+        "actimizeAnalyticsRiskScore": "100",
+        "userAnalyticsScore": ""
+    },
+    "validEntriesCount": "5",
+    "transactionKey": "111111"
+}
+2025-07-22 17:05:46-INFO -XMLtoJSON :----------------XML TO JSON CONVERSION STARTED----------------
+2025-07-22 17:05:46-INFO -XMLtoJSON :Process started at 2025-07-22 17:05:46
+2025-07-22 17:05:46-INFO -XMLtoJSON :Conversion successful
+2025-07-22 17:05:46-DEBUG-XMLtoJSON :Final JSON output: {
+    "detectionStatus": "success",
+    "EntriesActions": {
+        "mostSevereRiskLevel": "High",
+        "EntryAction": [
+            {
+                "entryActionName": "riskLevel",
+                "mostSevereValue": "High"
+            },
+            {
+                "entryActionName": "sendSMS",
+                "mostSevereValue": "yes"
+            }
+        ]
+    },
+    "logicalInputFileCreationDateTime": "2014-06-17 09:04:00",
+    "invalidEntriesCount": "0",
+    "BulkPaymentActions": {
+        "isAlertGenerated": "1",
+        "response": "block",
+        "BulkPaymentAction": [
+            {
+                "bulkPaymentActionName": "response",
+                "bulkPaymentActionValue": "block"
+            },
+            {
+                "bulkPaymentActionName": "sendSMS",
+                "bulkPaymentActionValue": "yes"
+            }
+        ]
+    },
+    "auditNo": "825579",
+    "numberOfSuccessfullyDetectedEntries": "5",
+    "batchId": "33333",
+    "logicalFileSequenceId": "54536565",
+    "transactionNormalizedDateTime": "2014-06-17 09:04:00",
+    "EntriesResults": {
+        "maxActimizeTransactionRiskScore": "100",
+        "maxUserAnalyticsScore": ""
+    },
+    "filename": "bulkPaymentXML_170614.csv",
+    "numberOfFailedDetectedEntries": "0",
+    "BulkPaymentResults": {
+        "actimizeAnalyticsRiskScore": "100",
+        "userAnalyticsScore": ""
+    },
+    "validEntriesCount": "5",
+    "transactionKey": "111111"
+}

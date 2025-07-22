@@ -33,54 +33,61 @@ public class XMLtoJSON {
     public static void main(String[] args) {
         try {
             // Initialize properties and logging
-            PropertiesLoader pl = new PropertiesLoader("src/main/resources/config.properties");
-            Logging logging = new Logging();
-            logging.configLog(pl, (ch.qos.logback.classic.Logger) logger, loggerContext);
+            // PropertiesLoader pl = new PropertiesLoader("src/main/resources/config.properties");
+//           if (args.length < 2) {
+//            // if (args.length < 1) {
+//            logger.error("Input validation failed: Requires XML string and config file path");
+//            System.exit(1);
+//        }
+//        
+           String xmlString = args[0];
+           String configFilePath = args[1];
+//             String configFilePath = args[0];
+//             String xmlString = """
+//                            <Response xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FF_bulkPaymentsResponseMessage_V1.xsd">
+//                            <BulkPayment detectionStatus="success" filename="bulkPaymentXML_170614.xml" transactionKey="111111" batchId="33333" logicalInputFileCreationDateTime="2014-06-17 09:04:00" logicalFileSequenceId="54536565" validEntriesCount="5" invalidEntriesCount="0" numberOfSuccessfullyDetectedEntries="5" numberOfFailedDetectedEntries="0">
+//                            <BulkPaymentTransactionIdentityFieldsList>
+//                            <TransactionIdentityField transactionIdentityFieldName="transactionKey" transactionIdentityFieldValue="111111"/>
+//                            </BulkPaymentTransactionIdentityFieldsList>
+//                            <BulkPaymentVersionIdentityFieldsList>
+//                            <VersionIdentityField versionIdentityFieldName="transactionKey" versionIdentityFieldValue="111111"/>
+//                            <VersionIdentityField versionIdentityFieldName="transactionNormalizedDateTime" versionIdentityFieldValue="2014-06-17 09:04:00"/>
+//                            </BulkPaymentVersionIdentityFieldsList>
+//                            <BulkPaymentActions isAlertGenerated="1" response="block">
+//                            <BulkPaymentAction bulkPaymentActionName="response" bulkPaymentActionValue="block"/>
+//                            <BulkPaymentAction bulkPaymentActionName="sendSMS" bulkPaymentActionValue="yes"/>
+//                            </BulkPaymentActions>
+//                            <BulkPaymentResults actimizeAnalyticsRiskScore="100" userAnalyticsScore=""/>
+//                            <EntriesResults maxActimizeTransactionRiskScore="100" maxUserAnalyticsScore=""/>
+//                            <EntriesActions mostSevereRiskLevel="High">
+//                            <EntryAction entryActionName="riskLevel" mostSevereValue="High"/>
+//                            <EntryAction entryActionName="sendSMS" mostSevereValue="yes"/>
+//                            </EntriesActions>
+//                            </BulkPayment>
+//                            </Response>""";
+//            logger.info("Input parameters validated");
+//            logger.debug("XML input length: {} characters", xmlString.length());
 
-            long startTime = System.currentTimeMillis();
-            logger.info("----------------XML TO JSON CONVERSION STARTED----------------");
-            logger.info("Process started at {}", dateFormat.format(new Date()));
-
-            if (args.length < 1) {
-                logger.error("Input validation failed: No XML string provided");
-                System.exit(1);
-            }
-            String xmlString = args[0];
-//              String xmlString = """
-//                           <Response xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FF_bulkPaymentsResponseMessage_V1.xsd">
-//                           <BulkPayment detectionStatus="success" filename="bulkPaymentXML_170614.xml" transactionKey="111111" batchId="33333" logicalInputFileCreationDateTime="2014-06-17 09:04:00" logicalFileSequenceId="54536565" validEntriesCount="5" invalidEntriesCount="0" numberOfSuccessfullyDetectedEntries="5" numberOfFailedDetectedEntries="0">
-//                           <BulkPaymentTransactionIdentityFieldsList>
-//                           <TransactionIdentityField transactionIdentityFieldName="transactionKey" transactionIdentityFieldValue="111111"/>
-//                           </BulkPaymentTransactionIdentityFieldsList>
-//                           <BulkPaymentVersionIdentityFieldsList>
-//                           <VersionIdentityField versionIdentityFieldName="transactionKey" versionIdentityFieldValue="111111"/>
-//                           <VersionIdentityField versionIdentityFieldName="transactionNormalizedDateTime" versionIdentityFieldValue="2014-06-17 09:04:00"/>
-//                           </BulkPaymentVersionIdentityFieldsList>
-//                           <BulkPaymentActions isAlertGenerated="1" response="block">
-//                           <BulkPaymentAction bulkPaymentActionName="response" bulkPaymentActionValue="block"/>
-//                           <BulkPaymentAction bulkPaymentActionName="sendSMS" bulkPaymentActionValue="yes"/>
-//                           </BulkPaymentActions>
-//                           <BulkPaymentResults actimizeAnalyticsRiskScore="100" userAnalyticsScore=""/>
-//                           <EntriesResults maxActimizeTransactionRiskScore="100" maxUserAnalyticsScore=""/>
-//                           <EntriesActions mostSevereRiskLevel="High">
-//                           <EntryAction entryActionName="riskLevel" mostSevereValue="High"/>
-//                           <EntryAction entryActionName="sendSMS" mostSevereValue="yes"/>
-//                           </EntriesActions>
-//                           </BulkPayment>
-//                           </Response>""";
-            logger.info("Input parameters validated");
-            logger.debug("XML input length: {} characters", xmlString.length());
-
-            convertXmlToJson(xmlString, pl);        
-            logCompletionStats(startTime);
+            convertXmlToJson(xmlString, configFilePath);        
+//            logCompletionStats(startTime);
         } catch (Exception e) {
             logger.error("Initialization failed: {}", e.getMessage(), e);
             System.exit(1);
         }
     }
-    public static JSONObject convertXmlToJson(String xmlString, PropertiesLoader pl) {
+    public static void convertXmlToJson(String xmlString, String configFilePath) {
         logger.info("Starting XML to JSON conversion");
         try {
+            PropertiesLoader pl = new PropertiesLoader(configFilePath);
+
+            Logging logging = new Logging();
+            logging.configLog(pl, (ch.qos.logback.classic.Logger) logger, loggerContext);
+
+//            long startTime = System.currentTimeMillis();
+            logger.info("----------------XML TO JSON CONVERSION STARTED----------------");
+            logger.info("Process started at {}", dateFormat.format(new Date()));
+
+            // PropertiesLoader pl = new PropertiesLoader(configFilePath);
             JSONObject jsonObj = XML.toJSONObject(xmlString);
             JSONObject bulkPayment = jsonObj.getJSONObject("Response").getJSONObject("BulkPayment");
 
@@ -180,14 +187,14 @@ public class XMLtoJSON {
 
             logger.info("Conversion successful");
             logger.debug("Final JSON output: {}", outputJson.toString(4));
-            return outputJson;
+//            return outputJson;
 
         } catch (JSONException e) {
             logger.error("XML parsing failed: {}", e.getMessage(), e);
-            return null;
+//            return null;
         } catch (Exception e) {
             logger.error("Unexpected error during conversion: {}", e.getMessage(), e);
-            return null;
+//            return null;
         }
     }
     public static void postJsonToEndpoint(String jsonPayload,String endpointUrl) {
