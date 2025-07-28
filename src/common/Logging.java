@@ -6,6 +6,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,13 +18,28 @@ import java.util.Date;
 
 public class Logging {
     private static boolean isConfigured = false;
+    private static String lastLogDate = "";
 
     public void configLog(PropertiesLoader pl, Logger logger, LoggerContext loggerContext) {
-        if (isConfigured) return;
+        // if (isConfigured) return;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String datenow = dateFormat.format(new Date());
-
+        if (isConfigured && datenow.equals(lastLogDate)) {
+        // Check if the existing appender's file still exists
+        FileAppender<ILoggingEvent> existingAppender = (FileAppender<ILoggingEvent>) loggerContext.getLogger(Logger.ROOT_LOGGER_NAME)
+            .getAppender("timestamp");
+        if (existingAppender != null) {
+            File logFile = new File(existingAppender.getFile());
+            if (logFile.exists()) {
+                return;
+            }
+        }
+    }
+        Logger rootLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+        if (isConfigured) {
+            rootLogger.detachAppender("timestamp");
+        }
         String logFilePath = pl.path_file_logs + datenow + "_" + pl.file_log_name + ".log";
 
         PatternLayoutEncoder encoder = new PatternLayoutEncoder();
@@ -39,11 +55,11 @@ public class Logging {
         fileAppender.setAppend(true);
         fileAppender.start();
 
-        Logger rootLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
         rootLogger.setLevel(Level.DEBUG);
         rootLogger.addAppender(fileAppender);
 
         isConfigured = true;
+        lastLogDate = datenow;
     }
-}
 
+    }

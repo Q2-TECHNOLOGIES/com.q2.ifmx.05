@@ -32,6 +32,14 @@ public class XMLtoJSON {
 
     public static void main(String[] args) {
         try {
+            
+//        String configFilePath = args[0];
+//        logger.info("Using config file: {}", configFilePath);
+//             File configFile = new File(configFilePath);
+//        if (!configFile.exists()) {
+//            logger.error("Config file not found at: {}", configFile.getAbsolutePath());
+//            System.exit(1);
+//        }
             // Initialize properties and logging
             // PropertiesLoader pl = new PropertiesLoader("src/main/resources/config.properties");
 //           if (args.length < 2) {
@@ -77,11 +85,10 @@ public class XMLtoJSON {
     }
     public static void convertXmlToJson(String xmlString, String configFilePath) {
         logger.info("Starting XML to JSON conversion");
+        Logging logging = new Logging();
         try {
-            PropertiesLoader pl = new PropertiesLoader(configFilePath);
-
-            Logging logging = new Logging();
-            logging.configLog(pl, (ch.qos.logback.classic.Logger) logger, loggerContext);
+        PropertiesLoader pl = new PropertiesLoader(configFilePath);
+        logging.configLog(pl, (ch.qos.logback.classic.Logger) logger, loggerContext);
 
 //            long startTime = System.currentTimeMillis();
             logger.info("----------------XML TO JSON CONVERSION STARTED----------------");
@@ -187,6 +194,12 @@ public class XMLtoJSON {
 
             logger.info("Conversion successful");
             logger.debug("Final JSON output: {}", outputJson.toString(4));
+            if (pl.endpoint_URL == null || pl.endpoint_URL.trim().isEmpty()) {
+            logger.error("Endpoint URL is not configured in properties file");
+            throw new IllegalArgumentException("API endpoint URL is required");
+        }
+            postJsonToEndpoint(outputJson.toString(), pl.endpoint_URL);
+
 //            return outputJson;
 
         } catch (JSONException e) {
@@ -198,9 +211,9 @@ public class XMLtoJSON {
         }
     }
     public static void postJsonToEndpoint(String jsonPayload,String endpointUrl) {
-//        logger.info("Initializing HTTP POST request to {}", endpointUrl);
-//        logger.debug("Request payload size: {} bytes", jsonPayload.length());
-//        logger.info("Converted JSON payload:\n{}", formatJson(jsonPayload));
+       logger.info("Initializing HTTP POST request to {}", endpointUrl);
+    //    logger.debug("Request payload size: {} bytes", jsonPayload.length());
+    //    logger.info("Converted JSON payload:\n{}", formatJson(jsonPayload));
 
         try {
             HttpClient client = HttpClient.newBuilder()
@@ -215,15 +228,13 @@ public class XMLtoJSON {
                 .build();
 
             logger.info("Sending HTTP request...");
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            logger.info("HTTP Response received");
-            // logger.info("Status Code: {}", response.statusCode());
-            // logger.debug("Response Headers: {}", response.headers().map());
-            // logger.info("Response Body Length: {} bytes", response.body().length());
-            // return response.body(); // Mengembalikan response body
+        logger.info("HTTP Response received - Status Code: {}", response.statusCode());
+        logger.info("Response Body: {}", response.body()); // Add this line to log the response body
+        logger.debug("Response Headers: {}", response.headers().map());
 
-        } catch (IOException e) {
+    } catch (IOException e) {
             logger.error("Network error occurred: {}", e.getMessage(), e);
         } catch (InterruptedException e) {
             logger.error("Process interrupted: {}", e.getMessage(), e);
