@@ -22,6 +22,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
+import common.DatabaseLogger;
 import common.Logging;
 import common.PropertiesLoader;
 
@@ -48,31 +49,31 @@ public class XMLtoJSON {
 //            System.exit(1);
 //        }
 //        
-           String xmlString = args[0];
-           String configFilePath = args[1];
-//             String configFilePath = args[0];
-//             String xmlString = """
-//                            <Response xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FF_bulkPaymentsResponseMessage_V1.xsd">
-//                            <BulkPayment detectionStatus="success" filename="bulkPaymentXML_170614.xml" transactionKey="111111" batchId="33333" logicalInputFileCreationDateTime="2014-06-17 09:04:00" logicalFileSequenceId="54536565" validEntriesCount="5" invalidEntriesCount="0" numberOfSuccessfullyDetectedEntries="5" numberOfFailedDetectedEntries="0">
-//                            <BulkPaymentTransactionIdentityFieldsList>
-//                            <TransactionIdentityField transactionIdentityFieldName="transactionKey" transactionIdentityFieldValue="111111"/>
-//                            </BulkPaymentTransactionIdentityFieldsList>
-//                            <BulkPaymentVersionIdentityFieldsList>
-//                            <VersionIdentityField versionIdentityFieldName="transactionKey" versionIdentityFieldValue="111111"/>
-//                            <VersionIdentityField versionIdentityFieldName="transactionNormalizedDateTime" versionIdentityFieldValue="2014-06-17 09:04:00"/>
-//                            </BulkPaymentVersionIdentityFieldsList>
-//                            <BulkPaymentActions isAlertGenerated="1" response="block">
-//                            <BulkPaymentAction bulkPaymentActionName="response" bulkPaymentActionValue="block"/>
-//                            <BulkPaymentAction bulkPaymentActionName="sendSMS" bulkPaymentActionValue="yes"/>
-//                            </BulkPaymentActions>
-//                            <BulkPaymentResults actimizeAnalyticsRiskScore="100" userAnalyticsScore=""/>
-//                            <EntriesResults maxActimizeTransactionRiskScore="100" maxUserAnalyticsScore=""/>
-//                            <EntriesActions mostSevereRiskLevel="High">
-//                            <EntryAction entryActionName="riskLevel" mostSevereValue="High"/>
-//                            <EntryAction entryActionName="sendSMS" mostSevereValue="yes"/>
-//                            </EntriesActions>
-//                            </BulkPayment>
-//                            </Response>""";
+//           String xmlString = args[0];
+//           String configFilePath = args[1];
+             String configFilePath = args[0];
+             String xmlString = """
+                            <Response xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FF_bulkPaymentsResponseMessage_V1.xsd">
+                            <BulkPayment detectionStatus="success" filename="bulkPaymentXML_170614.xml" transactionKey="111111" batchId="33333" logicalInputFileCreationDateTime="2014-06-17 09:04:00" logicalFileSequenceId="54536565" validEntriesCount="5" invalidEntriesCount="0" numberOfSuccessfullyDetectedEntries="5" numberOfFailedDetectedEntries="0">
+                            <BulkPaymentTransactionIdentityFieldsList>
+                            <TransactionIdentityField transactionIdentityFieldName="transactionKey" transactionIdentityFieldValue="111111"/>
+                            </BulkPaymentTransactionIdentityFieldsList>
+                            <BulkPaymentVersionIdentityFieldsList>
+                            <VersionIdentityField versionIdentityFieldName="transactionKey" versionIdentityFieldValue="111111"/>
+                            <VersionIdentityField versionIdentityFieldName="transactionNormalizedDateTime" versionIdentityFieldValue="2014-06-17 09:04:00"/>
+                            </BulkPaymentVersionIdentityFieldsList>
+                            <BulkPaymentActions isAlertGenerated="1" response="block">
+                            <BulkPaymentAction bulkPaymentActionName="response" bulkPaymentActionValue="block"/>
+                            <BulkPaymentAction bulkPaymentActionName="sendSMS" bulkPaymentActionValue="yes"/>
+                            </BulkPaymentActions>
+                            <BulkPaymentResults actimizeAnalyticsRiskScore="100" userAnalyticsScore=""/>
+                            <EntriesResults maxActimizeTransactionRiskScore="100" maxUserAnalyticsScore=""/>
+                            <EntriesActions mostSevereRiskLevel="High">
+                            <EntryAction entryActionName="riskLevel" mostSevereValue="High"/>
+                            <EntryAction entryActionName="sendSMS" mostSevereValue="yes"/>
+                            </EntriesActions>
+                            </BulkPayment>
+                            </Response>""";
 //            logger.info("Input parameters validated");
 //            logger.debug("XML input length: {} characters", xmlString.length());
 
@@ -198,7 +199,8 @@ public class XMLtoJSON {
             logger.error("Endpoint URL is not configured in properties file");
             throw new IllegalArgumentException("API endpoint URL is required");
         }
-            postJsonToEndpoint(outputJson.toString(), pl.endpoint_URL);
+            // postJsonToEndpoint(outputJson.toString(), pl.endpoint_URL);
+            postJsonToEndpoint(outputJson.toString(), pl.endpoint_URL, pl);
 
 //            return outputJson;
 
@@ -210,7 +212,7 @@ public class XMLtoJSON {
 //            return null;
         }
     }
-    public static void postJsonToEndpoint(String jsonPayload,String endpointUrl) {
+    public static void postJsonToEndpoint(String jsonPayload,String endpointUrl, PropertiesLoader pl) {
        logger.info("Initializing HTTP POST request to {}", endpointUrl);
     //    logger.debug("Request payload size: {} bytes", jsonPayload.length());
     //    logger.info("Converted JSON payload:\n{}", formatJson(jsonPayload));
@@ -233,7 +235,8 @@ public class XMLtoJSON {
         logger.info("HTTP Response received - Status Code: {}", response.statusCode());
         logger.info("Response Body: {}", response.body()); // Add this line to log the response body
         logger.debug("Response Headers: {}", response.headers().map());
-
+        DatabaseLogger dbLogger = new DatabaseLogger(pl);
+        dbLogger.logStatusCode(String.valueOf(response.statusCode()));
     } catch (IOException e) {
             logger.error("Network error occurred: {}", e.getMessage(), e);
         } catch (InterruptedException e) {

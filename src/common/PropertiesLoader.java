@@ -25,6 +25,11 @@ public class PropertiesLoader {
     public final String path_file_logs;
     
     public final String file_log_name;
+
+    // Database properties
+    public final String db_url;
+    public final String db_username;
+    public final String db_password;
     
     public PropertiesLoader(String prop_location) throws Exception{
         prop = new Properties();
@@ -45,9 +50,9 @@ public class PropertiesLoader {
         db_udm_stg_schema = prop.getProperty("db_udm_stg_schema");
         db_udm_stg_username = prop.getProperty("db_udm_stg_username");
         
-        //db_password = prop.getProperty("db_password");
-//        db_udm_stg_password = dec.decrypt(prop.getProperty("db_udm_stg_password"));
-        
+        db_url = prop.getProperty("db_url");
+        db_username = prop.getProperty("db_username");
+        db_password = prop.getProperty("db_password");
         path_file_backup  = prop.getProperty("path_file_backup");
         path_file_error = prop.getProperty("path_file_error");
         path_file_input = prop.getProperty("path_file_input");
