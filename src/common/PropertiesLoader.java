@@ -9,33 +9,20 @@ import java.util.Properties;
 
 public class PropertiesLoader {
     private Properties prop = null;
+    public final String DB_HOST;
+    public final String DB_PORT;
+    public final String DB_ACTONE_NAME;
+    public final String DB_ACTONE_USERNAME;
+    public final String DB_ACTONE_PASSWORD;
+    public final String ENDPOINT_URL;
+    public final String LOG_FILE_DIR;
+    public final String CUSTOM_FIELD_NAME;
+    public final String TABLE_CUSTOM_FIELD;
     
-    //database properties
-    public final String db_host;
-    public final String db_port;
-    public final String db_udm_name;
-    public final String db_udm_stg_schema;
-    public final String db_udm_stg_username;
-//    public final String db_udm_stg_password;
-    
-    public final String path_file_backup;
-    public final String path_file_error;
-    public final String path_file_input;
-    public final String endpoint_URL;
-    public final String path_file_logs;
-    
-    public final String file_log_name;
+    public final String FILE_LOG_NAME;
 
-    // Database properties
-    public final String db_url;
-    public final String db_username;
-    public final String db_password;
-    
     public PropertiesLoader(String prop_location) throws Exception{
-        prop = new Properties();
-        
-//        Decryptor dec = new Decryptor();
-        
+        prop = new Properties();        
        InputStream input = null;
        try {
            input = new FileInputStream(prop_location);
@@ -44,22 +31,17 @@ public class PropertiesLoader {
            System.out.println("Unable to load properties file. "+io);
        }
         
-        db_host = prop.getProperty("db_host");
-        db_port = prop.getProperty("db_port");
-        db_udm_name = prop.getProperty("db_udm_name");
-        db_udm_stg_schema = prop.getProperty("db_udm_stg_schema");
-        db_udm_stg_username = prop.getProperty("db_udm_stg_username");
-        
-        db_url = prop.getProperty("db_url");
-        db_username = prop.getProperty("db_username");
-        db_password = prop.getProperty("db_password");
-        path_file_backup  = prop.getProperty("path_file_backup");
-        path_file_error = prop.getProperty("path_file_error");
-        path_file_input = prop.getProperty("path_file_input");
-        endpoint_URL = prop.getProperty("endpoint_URL");
-        path_file_logs = prop.getProperty("path_file_logs");
+        DB_HOST = prop.getProperty("DB_HOST");
+        DB_PORT = prop.getProperty("DB_PORT");
+        DB_ACTONE_NAME = prop.getProperty("DB_ACTONE_NAME");
+        DB_ACTONE_USERNAME = prop.getProperty("DB_ACTONE_USERNAME");
+        DB_ACTONE_PASSWORD = prop.getProperty("DB_ACTONE_PASSWORD");
+        CUSTOM_FIELD_NAME = prop.getProperty("CUSTOM_FIELD_NAME");
+        TABLE_CUSTOM_FIELD = prop.getProperty("TABLE_CUSTOM_FIELD");
+        ENDPOINT_URL = prop.getProperty("ENDPOINT_URL");
+        LOG_FILE_DIR = prop.getProperty("LOG_FILE_DIR");
         
         
-        file_log_name = prop.getProperty("file_log_name");
+        FILE_LOG_NAME = prop.getProperty("FILE_LOG_NAME");
     }
 }

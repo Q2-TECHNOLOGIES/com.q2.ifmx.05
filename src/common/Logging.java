@@ -50,7 +50,7 @@ public class Logging {
             existingAppender.stop();
             rootLogger.detachAppender("timestamp");
         }
-        String logFilePath = pl.path_file_logs + datenow + "_" + pl.file_log_name + ".log";
+        String logFilePath = pl.LOG_FILE_DIR + datenow + "_" + pl.FILE_LOG_NAME + ".log";
 
         PatternLayoutEncoder encoder = new PatternLayoutEncoder();
         encoder.setContext(loggerContext);
