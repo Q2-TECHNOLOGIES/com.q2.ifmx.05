@@ -1,0 +1,136 @@
+2025-07-30 02:15:21-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:15:21-ERROR-main.OfflineBatchScreening:Usage: java OfflineBatchScreening <config_file_path>
+2025-07-30 02:17:08-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:17:09-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB
+2025-07-30 02:17:09-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NumberFormatException: Cannot parse null string
+	at java.base/java.lang.Integer.parseInt(Integer.java:550)
+	at java.base/java.lang.Integer.parseInt(Integer.java:685)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:43)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:36)
+2025-07-30 02:18:39-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:18:39-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:18:39-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: Cannot invoke "java.util.Properties.getProperty(String)" because "main.OfflineBatchScreening.config" is null
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:148)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:47)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:36)
+2025-07-30 02:19:48-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:19:48-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:19:48-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: null
+	at java.base/java.io.File.<init>(File.java:278)
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:148)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:47)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:36)
+2025-07-30 02:20:34-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:20:34-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:20:34-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: null
+	at java.base/java.io.File.<init>(File.java:278)
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:148)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:47)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:36)
+2025-07-30 02:20:53-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:20:53-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:20:53-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: null
+	at java.base/java.io.File.<init>(File.java:278)
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:150)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:49)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:36)
+2025-07-30 02:25:18-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:25:18-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:25:18-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: null
+	at java.base/java.io.File.<init>(File.java:278)
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:151)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:50)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 02:26:02-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:26:02-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:26:02-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 02:26:02-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:26:02-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: null
+	at java.base/java.io.File.<init>(File.java:278)
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:155)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:54)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 02:26:19-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:26:19-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:26:19-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 02:26:19-INFO -main.OfflineBatchScreening:Loaded properties:
+2025-07-30 02:26:19-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:26:19-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: null
+	at java.base/java.io.File.<init>(File.java:278)
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:157)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:56)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 02:28:01-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:28:01-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:28:01-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 02:28:01-INFO -main.OfflineBatchScreening:Loaded properties:
+2025-07-30 02:28:01-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:28:01-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NullPointerException: null
+	at java.base/java.io.File.<init>(File.java:278)
+	at main.OfflineBatchScreening.processLocalFiles(OfflineBatchScreening.java:157)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:56)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 02:30:02-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:30:02-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:30:02-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 02:30:02-INFO -main.OfflineBatchScreening:Loaded properties:
+2025-07-30 02:30:02-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:30:02-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NumberFormatException: Cannot parse null string
+	at java.base/java.lang.Integer.parseInt(Integer.java:550)
+	at java.base/java.lang.Integer.parseInt(Integer.java:685)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:52)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 02:30:44-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 02:30:44-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:30:44-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 02:30:44-INFO -main.OfflineBatchScreening:Loaded properties:
+2025-07-30 02:30:44-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 02:30:44-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NumberFormatException: Cannot parse null string
+	at java.base/java.lang.Integer.parseInt(Integer.java:550)
+	at java.base/java.lang.Integer.parseInt(Integer.java:685)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:56)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 06:06:59-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 06:06:59-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 06:06:59-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 06:06:59-INFO -main.OfflineBatchScreening:Loaded properties:
+2025-07-30 06:06:59-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 06:06:59-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NumberFormatException: Cannot parse null string
+	at java.base/java.lang.Integer.parseInt(Integer.java:550)
+	at java.base/java.lang.Integer.parseInt(Integer.java:685)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:56)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 06:11:24-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 06:11:24-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 06:11:24-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 06:11:24-INFO -main.OfflineBatchScreening:Loaded properties:
+2025-07-30 06:11:24-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 06:11:24-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NumberFormatException: Cannot parse null string
+	at java.base/java.lang.Integer.parseInt(Integer.java:550)
+	at java.base/java.lang.Integer.parseInt(Integer.java:685)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:56)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:32)
+2025-07-30 06:17:39-INFO -main.OfflineBatchScreening:Logging configured to: logs/batch_screening_20250730.log
+2025-07-30 06:17:39-INFO -main.OfflineBatchScreening:Looking for config file at: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 06:17:39-INFO -main.OfflineBatchScreening:Config file exists: true
+2025-07-30 06:17:39-INFO -main.OfflineBatchScreening:Loaded properties:
+2025-07-30 06:17:39-INFO -main.OfflineBatchScreening:Starting process with config: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\src\main\resources\config.properties
+2025-07-30 06:17:39-ERROR-main.OfflineBatchScreening:Fatal error: 
+java.lang.NumberFormatException: Cannot parse null string
+	at java.base/java.lang.Integer.parseInt(Integer.java:550)
+	at java.base/java.lang.Integer.parseInt(Integer.java:685)
+	at main.OfflineBatchScreening.runBatchScreening(OfflineBatchScreening.java:57)
+	at main.OfflineBatchScreening.main(OfflineBatchScreening.java:33)
