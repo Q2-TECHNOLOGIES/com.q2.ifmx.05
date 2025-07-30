@@ -25,19 +25,29 @@ public class Logging {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String datenow = dateFormat.format(new Date());
-        if (isConfigured && datenow.equals(lastLogDate)) {
+
+        boolean needsReconfigure = !datenow.equals(lastLogDate);
+
         // Check if the existing appender's file still exists
         FileAppender<ILoggingEvent> existingAppender = (FileAppender<ILoggingEvent>) loggerContext.getLogger(Logger.ROOT_LOGGER_NAME)
             .getAppender("timestamp");
         if (existingAppender != null) {
             File logFile = new File(existingAppender.getFile());
-            if (logFile.exists()) {
-                return;
+            if (!logFile.exists() || !logFile.canWrite()) {
+                needsReconfigure = true;
+                loggerContext.getLogger(Logger.ROOT_LOGGER_NAME).detachAppender("timestamp");
             }
+        } else {
+            needsReconfigure = true;
         }
-    }
+
+        if (!needsReconfigure && isConfigured) {
+            return;
+        }
+
         Logger rootLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-        if (isConfigured) {
+        if (existingAppender != null) {
+            existingAppender.stop();
             rootLogger.detachAppender("timestamp");
         }
         String logFilePath = pl.path_file_logs + datenow + "_" + pl.file_log_name + ".log";
@@ -60,6 +70,7 @@ public class Logging {
 
         isConfigured = true;
         lastLogDate = datenow;
+        logger.info("Logging configured to: {}", logFilePath);
     }
 
     }
