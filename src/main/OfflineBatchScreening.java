@@ -12,16 +12,22 @@ import javax.net.ssl.*;
 import java.security.*;
 import java.security.cert.*;
 import java.util.regex.Pattern;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import org.slf4j.LoggerFactory;
 import com.jcraft.jsch.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class OfflineBatchScreening {
     private static PropertiesLoader config;
     public static final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
     public static final org.slf4j.Logger logger = loggerContext.getLogger("OfflineBatch");
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private static int retryCount = 0;
     
@@ -146,7 +152,33 @@ public class OfflineBatchScreening {
             throw e;
         }
     }
-    
+    private static void processSingleFile(File file) {
+        try {
+            logger.info("Processing file: " + file.getName());
+            String fileContent = new String(Files.readAllBytes(file.toPath()));
+            
+            String[] transactions = fileContent.split(Pattern.quote(config.TRANSACTION_DELIMITER));
+        List<Map<String, Object>> allResponses = new ArrayList<>(); 
+
+            for (String transaction : transactions) {
+                if (transaction.trim().isEmpty()) continue;
+                
+                String transformedContent = transformToActimizeFormat(transaction, "");
+                Map<String, Object> serviceResponse = sendToService(transformedContent);
+                allResponses.add(serviceResponse);
+            }
+            if (!allResponses.isEmpty()) {
+                logResponses(allResponses); 
+            }
+        
+            
+            // Archive the file
+            archiveFile(file);
+            
+        } catch (Exception e) {
+            logger.error("Error processing file: " + file.getName(), e);
+        }
+    }
     private static void processLocalFiles(PropertiesLoader pl) {
         File dir = new File(pl.INPUT_DIR);
         File[] files = dir.listFiles();
@@ -164,78 +196,143 @@ public class OfflineBatchScreening {
         }
     }
     
-    private static void processSingleFile(File file) {
-        try {
-            logger.info("Processing file: " + file.getName());
-            String content = new String(Files.readAllBytes(file.toPath()));
-            String[] messages = content.split(Pattern.quote(config.TRANSACTION_DELIMITER));            
-            for (String message : messages) {
-                String response = sendToService(message.trim());
-                logResponse(response);
-            }
-            
-            archiveFile(file);
-        } catch (Exception e) {
-            logger.error("Error processing file " + file.getName() + ": " + e.getMessage(), e);
-        }
+    private static String transformToActimizeFormat(String originalMessage, String apiResponse) throws Exception {
+    // Create empty response structure
+    ObjectNode root = objectMapper.createObjectNode();
+    ObjectNode customOut = objectMapper.createObjectNode();
+    root.set("customOut", customOut);
+
+    try {
+        JsonNode inputJson = objectMapper.readTree(originalMessage);
+        JsonNode genericNode = inputJson.path("generic");
+        
+        // Transaction details - leave empty if not found
+        customOut.put("transactionKey", 
+            genericNode.path("baseTransactionC").path("transactionKey").asText(""));
+        customOut.put("transactionType", 
+            genericNode.path("baseTransactionC").path("transactionType").asText(""));
+        
+        // Scores - always include but empty if not applicable
+        customOut.put("actimizeAnalyticsScore", "");
+        customOut.put("actimizeTransactionRiskScore", "");
+        customOut.put("userAnalyticsScore", "");
+        customOut.put("isAlertGenerated", "");
+        customOut.put("responseCode", "");
+
+        // Action results - always include the structure but with empty values
+        ArrayNode actionResults = objectMapper.createArrayNode();
+        addEmptyActionResult(actionResults, "Action on Online User ID");
+        addEmptyActionResult(actionResults, "Alert");
+        addEmptyActionResult(actionResults, "Email To Internal");
+        addEmptyActionResult(actionResults, "Response");
+        
+        ObjectNode actionResultsSet = objectMapper.createObjectNode();
+        actionResultsSet.set("actionResultsSet_InnerSet", actionResults);
+        customOut.set("actionResultsSet", actionResultsSet);
+
+    } catch (Exception e) {
+        logger.error("Error transforming message, returning empty structure", e);
     }
-    
-    private static String sendToService(String message) {
-        try {
-            // Create SSL context that trusts all certificates (for demo only)
-            SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, new TrustManager[]{new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] xcs, String string) {}
-                public void checkServerTrusted(X509Certificate[] xcs, String string) {}
-                public X509Certificate[] getAcceptedIssuers() { return null; }
-            }}, new SecureRandom());
-            
-            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-            
-            URL url = new URL(config.ACTIMIZE_URL);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-            
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = message.getBytes("utf-8");
-                os.write(input, 0, input.length);
+
+    return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+}
+
+    private static void addEmptyActionResult(ArrayNode array, String name) {
+    array.add(objectMapper.createObjectNode()
+        .put("Name", name)
+        .put("Value", ""));  // Always empty value
+}
+    private static Map<String, Object> sendToService(String message) {
+    Map<String, Object> result = new HashMap<>();
+    HttpURLConnection  conn = null;
+    try {
+        URL url = new URL(config.ACTIMIZE_URL);
+        conn = (HttpURLConnection) url.openConnection();
+        
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setDoOutput(true);
+        
+        // Send request
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = message.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+        
+        // Get status code
+        int statusCode = conn.getResponseCode();
+        result.put("status_code", statusCode);
+        
+        // Read response
+        StringBuilder response = new StringBuilder();
+        try (InputStream is = conn.getInputStream();
+             BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"))) {
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine);
             }
-            
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), "utf-8"))) {
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
+            result.put("body", response.toString());
+        }
+        
+    } catch (IOException e) {
+        int errorCode = 500;
+        String errorResponse = "{\"error\":\"" + e.getMessage() + "\"}";
+        
+        if (conn != null) {
+            try {
+                errorCode = conn.getResponseCode();
+                try (InputStream es = conn.getErrorStream();
+                     BufferedReader br = new BufferedReader(new InputStreamReader(es, "utf-8"))) {
+                    StringBuilder errorBody = new StringBuilder();
+                    String errorLine;
+                    while ((errorLine = br.readLine()) != null) {
+                        errorBody.append(errorLine);
+                    }
+                    errorResponse = errorBody.toString();
                 }
+            } catch (IOException ioException) {
+                errorResponse = "{\"error\":\"Failed to get error response\"}";
+            }
+        }
+        
+        result.put("status_code", errorCode);
+        result.put("body", errorResponse);
+    } finally {
+        if (conn != null) {
+            conn.disconnect();
+        }
+    }
+    return result;
+}
+    private static void logResponses(List<Map<String, Object>> responses) {
+    try {
+        logger.info("=== Transaction Responses ===");
+        
+        ObjectMapper mapper = new ObjectMapper();
+        int transactionCount = 1;
+        
+        for (Map<String, Object> response : responses) {
+            ObjectNode enhancedResponse = mapper.createObjectNode();
+            enhancedResponse.put("http_status", (Integer) response.get("status_code"));
+            
+            try {
+                JsonNode responseBody = mapper.readTree(response.get("body").toString());
+                enhancedResponse.set("api_response", responseBody);
+            } catch (Exception e) {
+                enhancedResponse.put("api_response", response.get("body").toString());
             }
             
-            return response.toString();
-        } catch (Exception e) {
-            logger.error("Error sending to service: " + e.getMessage(), e);
-            return "{\"error\": \"" + e.getMessage() + "\"}";
-        }
-    }
-    
-    private static void logResponse(String response) {
-        try {
-            String logDir = config.LOG_FILE_DIR;
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String logFile = logDir + "response_" + timestamp + ".log";
+            String formattedResponse = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(enhancedResponse);
             
-            Files.write(Paths.get(logFile), response.getBytes(), 
-                      StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-            
-            logger.info("Response logged to: " + logFile);
-        } catch (Exception e) {
-            logger.error("Error logging response: " + e.getMessage(), e);
+            logger.info("Transaction {} response:\n{}", transactionCount++, formattedResponse);
         }
+        
+        logger.info("=== End of Transaction Responses ===");
+    } catch (Exception e) {
+        logger.error("Error logging responses: {}", e.getMessage(), e);
     }
-    
+}
     private static void archiveFile(File file) {
         try {
             String archiveDir = config.OUTPUT_DIR + "archive/";
@@ -250,9 +347,8 @@ public class OfflineBatchScreening {
             logger.error("Error archiving file: " + e.getMessage(), e);
         }
     }
-    
     private static String decryptPassword(String encrypted) {
-        // Implement your decryption logic here
-        return encrypted; // Placeholder - replace with actual decryption
+       
+    return encrypted; 
     }
 }
