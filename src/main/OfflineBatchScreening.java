@@ -40,7 +40,6 @@ public class OfflineBatchScreening {
             System.exit(1);
         }
     }
-    
     public static void runBatchScreening(String configFilePath) {
         logger.info("Starting Offline Batch Screening Process");
         Logging logging = new Logging();
@@ -59,7 +58,6 @@ public class OfflineBatchScreening {
             System.exit(1);
         }
     }
-
     private static void downloadFilesFromSFTP(PropertiesLoader pl) {
         JSch jsch = new JSch();
         Session session = null;
@@ -133,10 +131,9 @@ public class OfflineBatchScreening {
             }
         }
     }
-    
     private static void downloadSingleFile(ChannelSftp channelSftp, String filename, PropertiesLoader pl) throws Exception {
         String localPath = pl.INPUT_DIR + filename;
-        File localFile = new File(localPath);
+        // File localFile = new File(localPath);
         
         try {
             channelSftp.get(filename, localPath);
@@ -195,52 +192,87 @@ public class OfflineBatchScreening {
             logger.info("No files found in local directory");
         }
     }
-    
-    private static String transformToActimizeFormat(String originalMessage, String apiResponse) throws Exception {
-    // Create empty response structure
-    ObjectNode root = objectMapper.createObjectNode();
-    ObjectNode customOut = objectMapper.createObjectNode();
-    root.set("customOut", customOut);
-
-    try {
-        JsonNode inputJson = objectMapper.readTree(originalMessage);
-        JsonNode genericNode = inputJson.path("generic");
-        
-        // Transaction details - leave empty if not found
-        customOut.put("transactionKey", 
-            genericNode.path("baseTransactionC").path("transactionKey").asText(""));
-        customOut.put("transactionType", 
-            genericNode.path("baseTransactionC").path("transactionType").asText(""));
-        
-        // Scores - always include but empty if not applicable
-        customOut.put("actimizeAnalyticsScore", "");
-        customOut.put("actimizeTransactionRiskScore", "");
-        customOut.put("userAnalyticsScore", "");
-        customOut.put("isAlertGenerated", "");
-        customOut.put("responseCode", "");
-
-        // Action results - always include the structure but with empty values
-        ArrayNode actionResults = objectMapper.createArrayNode();
-        addEmptyActionResult(actionResults, "Action on Online User ID");
-        addEmptyActionResult(actionResults, "Alert");
-        addEmptyActionResult(actionResults, "Email To Internal");
-        addEmptyActionResult(actionResults, "Response");
-        
-        ObjectNode actionResultsSet = objectMapper.createObjectNode();
-        actionResultsSet.set("actionResultsSet_InnerSet", actionResults);
-        customOut.set("actionResultsSet", actionResultsSet);
-
-    } catch (Exception e) {
-        logger.error("Error transforming message, returning empty structure", e);
-    }
-
-    return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+    private static String cleanJsonString(String json) {
+    return json.replace('\u00A0', ' ')  
+              .replace('\u200B', ' ')  
+              .replace('\uFEFF', ' '); 
 }
+    private static String transformToActimizeFormat(String originalMessage, String apiResponse) throws Exception {
+        ObjectNode root = objectMapper.createObjectNode();
+        ObjectNode customOut = objectMapper.createObjectNode();
+        root.set("customOut", customOut);
 
+        try {
+            String cleanedMessage = cleanJsonString(originalMessage);
+            JsonNode inputJson = objectMapper.readTree(cleanedMessage);
+            JsonNode genericNode = inputJson.path("generic");
+            
+            // Transaction details
+            customOut.put("transactionKey", genericNode.path("baseTransactionC").path("transactionKey").asText(""));
+            customOut.put("transactionType", genericNode.path("baseTransactionC").path("transactionType").asText(""));
+            
+            // Required Actimize fields
+            customOut.put("actimizeAnalyticsScore", 0); // Must be numeric
+            customOut.put("actimizeTransactionRiskScore", 0); // Must be numeric
+            customOut.put("userAnalyticsScore", 0); // Must be numeric
+            customOut.put("isAlertGenerated", ""); // Must be boolean
+            customOut.put("responseCode", "");
+
+            // Action results
+            ArrayNode actionResults = objectMapper.createArrayNode();
+            addEmptyActionResult(actionResults, "Action on Online User ID");
+            addEmptyActionResult(actionResults, "Alert");
+            addEmptyActionResult(actionResults, "Email To Internal");
+            addEmptyActionResult(actionResults, "Response");
+            
+            ObjectNode actionResultsSet = objectMapper.createObjectNode();
+            actionResultsSet.set("actionResultsSet_InnerSet", actionResults);
+            customOut.set("actionResultsSet", actionResultsSet);
+
+            // Numeric fields with proper defaults
+            addNumericFieldSafely(customOut, genericNode, "amount", "originalAmount", 0);
+            addNumericFieldSafely(customOut, genericNode, "amount", "normalizedOriginalAmount", 0);
+            addNumericFieldSafely(customOut, genericNode, "transferTransaction", "paymentSpeedCd", 0);
+            
+            // Add party and account details
+            customOut.put("partyKey", genericNode.path("baseTransactionA").path("partyKey").asText(""));
+            customOut.put("accountKey", genericNode.path("baseTransactionB").path("accountKey").asText(""));
+            customOut.put("userId", genericNode.path("baseTransactionA").path("userId").asText(""));
+            
+            // Add timestamp fields
+            customOut.put("transactionLocalDateTime", genericNode.path("baseTransactionA").path("transactionLocalDateTime").asText(""));
+            customOut.put("transactionNormalizedDateTime", genericNode.path("baseTransactionA").path("transactionNormalizedDateTime").asText(""));
+            
+        } catch (Exception e) {
+            logger.error("Error transforming message, returning empty structure", e);
+        }
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+    }
+    private static void addNumericFieldSafely(ObjectNode target, JsonNode source, String parentField, String fieldName, double defaultValue) {
+        if (source.has(parentField)) {
+            JsonNode parentNode = source.get(parentField);
+            if (parentNode.has(fieldName) && !parentNode.get(fieldName).isNull()) {
+                JsonNode valueNode = parentNode.get(fieldName);
+                if (valueNode.isNumber()) {
+                    target.put(fieldName, valueNode.asDouble());
+                } else if (valueNode.isTextual()) {
+                    try {
+                        target.put(fieldName, Double.parseDouble(valueNode.asText()));
+                    } catch (NumberFormatException e) {
+                        target.put(fieldName, defaultValue);
+                    }
+                }
+            } else {
+                target.put(fieldName, defaultValue);
+            }
+        } else {
+            target.put(fieldName, defaultValue);
+        }
+    }
     private static void addEmptyActionResult(ArrayNode array, String name) {
     array.add(objectMapper.createObjectNode()
         .put("Name", name)
-        .put("Value", ""));  // Always empty value
+        .put("Value", ""));  
 }
     private static Map<String, Object> sendToService(String message) {
     Map<String, Object> result = new HashMap<>();
@@ -248,14 +280,14 @@ public class OfflineBatchScreening {
     try {
         URL url = new URL(config.ACTIMIZE_URL);
         conn = (HttpURLConnection) url.openConnection();
-        
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setDoOutput(true);
         
+        String cleanedJson = cleanJsonString(message);
         // Send request
         try (OutputStream os = conn.getOutputStream()) {
-            byte[] input = message.getBytes("utf-8");
+            byte[] input = cleanedJson.getBytes("utf-8");
             os.write(input, 0, input.length);
         }
         
