@@ -1,430 +1,117 @@
-2025-08-04 11:07:07-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
-2025-08-04 11:07:07-INFO -OfflineBatch:Processing 1 local files
-2025-08-04 11:07:07-INFO -OfflineBatch:Processing file: offline_batch_DDMMYYYY.txt
-2025-08-04 11:07:09-INFO -OfflineBatch:=== Transaction Responses ===
-2025-08-04 11:07:09-INFO -OfflineBatch:Transaction 1 response:
+2025-08-04 15:37:27-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
+2025-08-04 15:37:27-INFO -OfflineBatch:No files found in local directory
+2025-08-04 15:37:27-INFO -OfflineBatch:Process completed successfully.
+2025-08-04 15:38:12-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
+2025-08-04 15:38:12-INFO -OfflineBatch:Processing 1 local files
+2025-08-04 15:38:12-INFO -OfflineBatch:Processing file: offline_batch_DDMMYYYY.txt
+2025-08-04 15:38:15-INFO -OfflineBatch:=== Transaction Responses ===
+2025-08-04 15:38:15-INFO -OfflineBatch:Transaction 1 response:
 {
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-8\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : \"\",\r\n    \"actimizeTransactionRiskScore\" : \"\",\r\n    \"userAnalyticsScore\" : \"\",\r\n    \"isAlertGenerated\" : \"\",\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    }\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "621",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-689031ec-43d0fa83218c51bc288c022d"
-    },
-    "json" : {
-      "customOut" : {
-        "actimizeAnalyticsScore" : "",
-        "actimizeTransactionRiskScore" : "",
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : "",
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-8",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : ""
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
+  "customOut" : {
+    "actimizeAnalyticsScore" : 85,
+    "actimizeTransactionRiskScore" : 85,
+    "isAlertGenerated" : true,
+    "responseCode" : "Decline",
+    "userAnalyticsScore" : 0,
+    "actionResultsSet" : {
+      "actionResultsSet_InnerSet" : [ {
+        "Name" : "Action on Online User ID",
+        "Value" : "Take no action"
+      }, {
+        "Name" : "Alert",
+        "Value" : "Yes"
+      }, {
+        "Name" : "Email To Internal",
+        "Value" : "Send Email"
+      }, {
+        "Name" : "Response",
+        "Value" : "Decline"
+      } ]
+    }
   }
 }
-2025-08-04 11:07:09-INFO -OfflineBatch:Transaction 2 response:
+2025-08-04 15:38:15-INFO -OfflineBatch:Transaction 2 response:
 {
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-9\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : \"\",\r\n    \"actimizeTransactionRiskScore\" : \"\",\r\n    \"userAnalyticsScore\" : \"\",\r\n    \"isAlertGenerated\" : \"\",\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    }\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "621",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-689031ed-154a36131e6cc624394f3785"
-    },
-    "json" : {
-      "customOut" : {
-        "actimizeAnalyticsScore" : "",
-        "actimizeTransactionRiskScore" : "",
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : "",
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-9",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : ""
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
+  "customOut" : {
+    "actimizeAnalyticsScore" : 85,
+    "actimizeTransactionRiskScore" : 85,
+    "isAlertGenerated" : true,
+    "responseCode" : "Decline",
+    "userAnalyticsScore" : 0,
+    "actionResultsSet" : {
+      "actionResultsSet_InnerSet" : [ {
+        "Name" : "Action on Online User ID",
+        "Value" : "Take no action"
+      }, {
+        "Name" : "Alert",
+        "Value" : "Yes"
+      }, {
+        "Name" : "Email To Internal",
+        "Value" : "Send Email"
+      }, {
+        "Name" : "Response",
+        "Value" : "Decline"
+      } ]
+    }
   }
 }
-2025-08-04 11:07:09-INFO -OfflineBatch:=== End of Transaction Responses ===
-2025-08-04 11:07:09-INFO -OfflineBatch:Archived file: offline_batch_DDMMYYYY.txt
-2025-08-04 11:07:09-INFO -OfflineBatch:Process completed successfully.
-2025-08-04 11:13:05-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
-2025-08-04 11:13:05-INFO -OfflineBatch:Processing 1 local files
-2025-08-04 11:13:05-INFO -OfflineBatch:Processing file: offline_batch04.txt
-2025-08-04 11:13:07-INFO -OfflineBatch:=== Transaction Responses ===
-2025-08-04 11:13:07-INFO -OfflineBatch:Transaction 1 response:
+2025-08-04 15:38:15-INFO -OfflineBatch:=== End of Transaction Responses ===
+2025-08-04 15:38:15-INFO -OfflineBatch:Archived file: offline_batch_DDMMYYYY.txt
+2025-08-04 15:38:15-INFO -OfflineBatch:Process completed successfully.
+2025-08-04 15:53:38-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
+2025-08-04 15:53:38-INFO -OfflineBatch:Processing 1 local files
+2025-08-04 15:53:38-INFO -OfflineBatch:Processing file: offline_batch_DDMMYYYY.txt
+2025-08-04 15:53:42-INFO -OfflineBatch:=== Transaction Responses ===
+2025-08-04 15:53:42-INFO -OfflineBatch:Transaction 1 response:
 {
-  "http_status" : 502,
-  "api_response" : "<html><head><title>502 Bad Gateway</title></head><body><center><h1>502 Bad Gateway</h1></center></body></html>"
-}
-2025-08-04 11:13:07-INFO -OfflineBatch:Transaction 2 response:
-{
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-a8\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : \"\",\r\n    \"actimizeTransactionRiskScore\" : \"\",\r\n    \"userAnalyticsScore\" : \"\",\r\n    \"isAlertGenerated\" : \"\",\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    }\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "622",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-68903353-34fd3a7d2ce8c5b018f366d1"
-    },
-    "json" : {
-      "customOut" : {
-        "actimizeAnalyticsScore" : "",
-        "actimizeTransactionRiskScore" : "",
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : "",
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-a8",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : ""
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
+  "customOut" : {
+    "actimizeAnalyticsScore" : "",
+    "actimizeTransactionRiskScore" : "",
+    "isAlertGenerated" : "",
+    "responseCode" : "",
+    "userAnalyticsScore" : "",
+    "actionResultsSet" : {
+      "actionResultsSet_InnerSet" : [ {
+        "Name" : "Action on Online User ID",
+        "Value" : ""
+      }, {
+        "Name" : "Alert",
+        "Value" : ""
+      }, {
+        "Name" : "Email To Internal",
+        "Value" : ""
+      }, {
+        "Name" : "Response",
+        "Value" : ""
+      } ]
+    }
   }
 }
-2025-08-04 11:13:07-INFO -OfflineBatch:=== End of Transaction Responses ===
-2025-08-04 11:13:07-INFO -OfflineBatch:Archived file: offline_batch04.txt
-2025-08-04 11:13:07-INFO -OfflineBatch:Process completed successfully.
-2025-08-04 11:23:27-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
-2025-08-04 11:23:27-INFO -OfflineBatch:No files found in local directory
-2025-08-04 11:23:27-INFO -OfflineBatch:Process completed successfully.
-2025-08-04 11:24:00-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
-2025-08-04 11:24:00-INFO -OfflineBatch:Processing 1 local files
-2025-08-04 11:24:00-INFO -OfflineBatch:Processing file: offline_batch_DDMMYYYY.txt
-2025-08-04 11:24:03-INFO -OfflineBatch:=== Transaction Responses ===
-2025-08-04 11:24:03-INFO -OfflineBatch:Transaction 1 response:
+2025-08-04 15:53:42-INFO -OfflineBatch:Transaction 2 response:
 {
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-8\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : \"\",\r\n    \"actimizeTransactionRiskScore\" : \"\",\r\n    \"userAnalyticsScore\" : \"\",\r\n    \"isAlertGenerated\" : \"\",\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    }\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "621",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-689035e1-56bcedd9770d0c611d9e191f"
-    },
-    "json" : {
-      "customOut" : {
-        "actimizeAnalyticsScore" : "",
-        "actimizeTransactionRiskScore" : "",
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : "",
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-8",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : ""
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
+  "customOut" : {
+    "actimizeAnalyticsScore" : "",
+    "actimizeTransactionRiskScore" : "",
+    "isAlertGenerated" : "",
+    "responseCode" : "",
+    "userAnalyticsScore" : "",
+    "actionResultsSet" : {
+      "actionResultsSet_InnerSet" : [ {
+        "Name" : "Action on Online User ID",
+        "Value" : ""
+      }, {
+        "Name" : "Alert",
+        "Value" : ""
+      }, {
+        "Name" : "Email To Internal",
+        "Value" : ""
+      }, {
+        "Name" : "Response",
+        "Value" : ""
+      } ]
+    }
   }
 }
-2025-08-04 11:24:03-INFO -OfflineBatch:Transaction 2 response:
-{
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-9\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : \"\",\r\n    \"actimizeTransactionRiskScore\" : \"\",\r\n    \"userAnalyticsScore\" : \"\",\r\n    \"isAlertGenerated\" : \"\",\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    }\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "621",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-689035e2-11efc39268bf3d145fd19d9e"
-    },
-    "json" : {
-      "customOut" : {
-        "actimizeAnalyticsScore" : "",
-        "actimizeTransactionRiskScore" : "",
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : "",
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-9",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : ""
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
-  }
-}
-2025-08-04 11:24:03-INFO -OfflineBatch:=== End of Transaction Responses ===
-2025-08-04 11:24:03-INFO -OfflineBatch:Archived file: offline_batch_DDMMYYYY.txt
-2025-08-04 11:24:03-INFO -OfflineBatch:Process completed successfully.
-2025-08-04 11:39:39-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
-2025-08-04 11:39:39-INFO -OfflineBatch:Processing 1 local files
-2025-08-04 11:39:39-INFO -OfflineBatch:Processing file: test.json
-2025-08-04 11:39:41-INFO -OfflineBatch:=== Transaction Responses ===
-2025-08-04 11:39:41-INFO -OfflineBatch:Transaction 1 response:
-{
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-8\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : \"\",\r\n    \"actimizeTransactionRiskScore\" : \"\",\r\n    \"userAnalyticsScore\" : \"\",\r\n    \"isAlertGenerated\" : \"\",\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    },\r\n    \"originalAmount\" : 500.0,\r\n    \"normalizedOriginalAmount\" : 500.0,\r\n    \"paymentSpeedCd\" : 1.0\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "722",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-6890398d-4bcff721750ab9597759fae2"
-    },
-    "json" : {
-      "customOut" : {
-        "actimizeAnalyticsScore" : "",
-        "actimizeTransactionRiskScore" : "",
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : "",
-        "normalizedOriginalAmount" : 500.0,
-        "originalAmount" : 500.0,
-        "paymentSpeedCd" : 1.0,
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-8",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : ""
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
-  }
-}
-2025-08-04 11:39:41-INFO -OfflineBatch:=== End of Transaction Responses ===
-2025-08-04 11:39:41-INFO -OfflineBatch:Archived file: test.json
-2025-08-04 11:39:41-INFO -OfflineBatch:Process completed successfully.
-2025-08-04 13:15:07-INFO -OfflineBatch:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\com.q2.ifmx.05_OfflineBatchScreening\20250804_application.log
-2025-08-04 13:15:07-INFO -OfflineBatch:Processing 1 local files
-2025-08-04 13:15:07-INFO -OfflineBatch:Processing file: offline_batch_DDMMYYYY.txt
-2025-08-04 13:15:11-INFO -OfflineBatch:=== Transaction Responses ===
-2025-08-04 13:15:11-INFO -OfflineBatch:Transaction 1 response:
-{
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-8\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : 0,\r\n    \"actimizeTransactionRiskScore\" : 0,\r\n    \"userAnalyticsScore\" : 0,\r\n    \"isAlertGenerated\" : false,\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    },\r\n    \"originalAmount\" : 500.0,\r\n    \"normalizedOriginalAmount\" : 500.0,\r\n    \"paymentSpeedCd\" : 1.0,\r\n    \"partyKey\" : \"ii001221438\",\r\n    \"accountKey\" : \"F-3228865900004-2\",\r\n    \"userId\" : \"r2corp.com\",\r\n    \"transactionLocalDateTime\" : \"2025-02-26T20:06:00.000-05:00\",\r\n    \"transactionNormalizedDateTime\" : \"2025-02-26T20:06:00.000-05:00\"\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "965",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-68904fed-7d8cca813802fc384cad2c97"
-    },
-    "json" : {
-      "customOut" : {
-        "accountKey" : "F-3228865900004-2",
-        "actimizeAnalyticsScore" : 0,
-        "actimizeTransactionRiskScore" : 0,
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : false,
-        "normalizedOriginalAmount" : 500.0,
-        "originalAmount" : 500.0,
-        "partyKey" : "ii001221438",
-        "paymentSpeedCd" : 1.0,
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-8",
-        "transactionLocalDateTime" : "2025-02-26T20:06:00.000-05:00",
-        "transactionNormalizedDateTime" : "2025-02-26T20:06:00.000-05:00",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : 0,
-        "userId" : "r2corp.com"
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
-  }
-}
-2025-08-04 13:15:11-INFO -OfflineBatch:Transaction 2 response:
-{
-  "http_status" : 200,
-  "api_response" : {
-    "args" : { },
-    "data" : "{\r\n  \"customOut\" : {\r\n    \"transactionKey\" : \"ii002173138X-9\",\r\n    \"transactionType\" : \"ACH\",\r\n    \"actimizeAnalyticsScore\" : 0,\r\n    \"actimizeTransactionRiskScore\" : 0,\r\n    \"userAnalyticsScore\" : 0,\r\n    \"isAlertGenerated\" : false,\r\n    \"responseCode\" : \"\",\r\n    \"actionResultsSet\" : {\r\n      \"actionResultsSet_InnerSet\" : [ {\r\n        \"Name\" : \"Action on Online User ID\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Alert\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Email To Internal\",\r\n        \"Value\" : \"\"\r\n      }, {\r\n        \"Name\" : \"Response\",\r\n        \"Value\" : \"\"\r\n      } ]\r\n    },\r\n    \"originalAmount\" : 500.0,\r\n    \"normalizedOriginalAmount\" : 500.0,\r\n    \"paymentSpeedCd\" : 1.0,\r\n    \"partyKey\" : \"ii001221439\",\r\n    \"accountKey\" : \"F-3228865900004-3\",\r\n    \"userId\" : \"r2corp.com\",\r\n    \"transactionLocalDateTime\" : \"2025-02-26T20:06:00.000-05:00\",\r\n    \"transactionNormalizedDateTime\" : \"2025-02-26T20:06:00.000-05:00\"\r\n  }\r\n}",
-    "files" : { },
-    "form" : { },
-    "headers" : {
-      "Accept" : "*/*",
-      "Content-Length" : "965",
-      "Content-Type" : "application/json",
-      "Host" : "www.httpbin.org",
-      "User-Agent" : "Java/23.0.2",
-      "X-Amzn-Trace-Id" : "Root=1-68904fee-060c46cb7199cc0f6217bc71"
-    },
-    "json" : {
-      "customOut" : {
-        "accountKey" : "F-3228865900004-3",
-        "actimizeAnalyticsScore" : 0,
-        "actimizeTransactionRiskScore" : 0,
-        "actionResultsSet" : {
-          "actionResultsSet_InnerSet" : [ {
-            "Name" : "Action on Online User ID",
-            "Value" : ""
-          }, {
-            "Name" : "Alert",
-            "Value" : ""
-          }, {
-            "Name" : "Email To Internal",
-            "Value" : ""
-          }, {
-            "Name" : "Response",
-            "Value" : ""
-          } ]
-        },
-        "isAlertGenerated" : false,
-        "normalizedOriginalAmount" : 500.0,
-        "originalAmount" : 500.0,
-        "partyKey" : "ii001221439",
-        "paymentSpeedCd" : 1.0,
-        "responseCode" : "",
-        "transactionKey" : "ii002173138X-9",
-        "transactionLocalDateTime" : "2025-02-26T20:06:00.000-05:00",
-        "transactionNormalizedDateTime" : "2025-02-26T20:06:00.000-05:00",
-        "transactionType" : "ACH",
-        "userAnalyticsScore" : 0,
-        "userId" : "r2corp.com"
-      }
-    },
-    "origin" : "103.183.18.163",
-    "url" : "https://www.httpbin.org/post"
-  }
-}
-2025-08-04 13:15:11-INFO -OfflineBatch:=== End of Transaction Responses ===
-2025-08-04 13:15:11-INFO -OfflineBatch:Archived file: offline_batch_DDMMYYYY.txt
-2025-08-04 13:15:11-INFO -OfflineBatch:Process completed successfully.
+2025-08-04 15:53:42-INFO -OfflineBatch:=== End of Transaction Responses ===
+2025-08-04 15:53:42-INFO -OfflineBatch:Archived file: offline_batch_DDMMYYYY.txt
+2025-08-04 15:53:42-INFO -OfflineBatch:Process completed successfully.

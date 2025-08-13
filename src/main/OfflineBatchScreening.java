@@ -69,7 +69,7 @@ public class OfflineBatchScreening {
             session = jsch.getSession(pl.SFTP_USER, pl.SFTP_HOST, Integer.parseInt(pl.SFTP_PORT));
             
             // Login with decrypted password
-            String decryptedPwd = decryptPassword(pl.SFTP_PASSWORD);
+            String decryptedPwd = decryptedPass(pl.SFTP_PASSWORD);
             session.setPassword(decryptedPwd);
             
             // Avoid host key verification (not recommended for production)
@@ -159,9 +159,7 @@ public class OfflineBatchScreening {
 
             for (String transaction : transactions) {
                 if (transaction.trim().isEmpty()) continue;
-                
-                String transformedContent = transformToActimizeFormat(transaction, "");
-                Map<String, Object> serviceResponse = sendToService(transformedContent);
+                Map<String, Object> serviceResponse = sendToService(transaction);
                 allResponses.add(serviceResponse);
             }
             if (!allResponses.isEmpty()) {
@@ -196,83 +194,6 @@ public class OfflineBatchScreening {
     return json.replace('\u00A0', ' ')  
               .replace('\u200B', ' ')  
               .replace('\uFEFF', ' '); 
-}
-    private static String transformToActimizeFormat(String originalMessage, String apiResponse) throws Exception {
-        ObjectNode root = objectMapper.createObjectNode();
-        ObjectNode customOut = objectMapper.createObjectNode();
-        root.set("customOut", customOut);
-
-        try {
-            String cleanedMessage = cleanJsonString(originalMessage);
-            JsonNode inputJson = objectMapper.readTree(cleanedMessage);
-            JsonNode genericNode = inputJson.path("generic");
-            
-            // Transaction details
-            customOut.put("transactionKey", genericNode.path("baseTransactionC").path("transactionKey").asText(""));
-            customOut.put("transactionType", genericNode.path("baseTransactionC").path("transactionType").asText(""));
-            
-            // Required Actimize fields
-            customOut.put("actimizeAnalyticsScore", 0); // Must be numeric
-            customOut.put("actimizeTransactionRiskScore", 0); // Must be numeric
-            customOut.put("userAnalyticsScore", 0); // Must be numeric
-            customOut.put("isAlertGenerated", ""); // Must be boolean
-            customOut.put("responseCode", "");
-
-            // Action results
-            ArrayNode actionResults = objectMapper.createArrayNode();
-            addEmptyActionResult(actionResults, "Action on Online User ID");
-            addEmptyActionResult(actionResults, "Alert");
-            addEmptyActionResult(actionResults, "Email To Internal");
-            addEmptyActionResult(actionResults, "Response");
-            
-            ObjectNode actionResultsSet = objectMapper.createObjectNode();
-            actionResultsSet.set("actionResultsSet_InnerSet", actionResults);
-            customOut.set("actionResultsSet", actionResultsSet);
-
-            // Numeric fields with proper defaults
-            addNumericFieldSafely(customOut, genericNode, "amount", "originalAmount", 0);
-            addNumericFieldSafely(customOut, genericNode, "amount", "normalizedOriginalAmount", 0);
-            addNumericFieldSafely(customOut, genericNode, "transferTransaction", "paymentSpeedCd", 0);
-            
-            // Add party and account details
-            customOut.put("partyKey", genericNode.path("baseTransactionA").path("partyKey").asText(""));
-            customOut.put("accountKey", genericNode.path("baseTransactionB").path("accountKey").asText(""));
-            customOut.put("userId", genericNode.path("baseTransactionA").path("userId").asText(""));
-            
-            // Add timestamp fields
-            customOut.put("transactionLocalDateTime", genericNode.path("baseTransactionA").path("transactionLocalDateTime").asText(""));
-            customOut.put("transactionNormalizedDateTime", genericNode.path("baseTransactionA").path("transactionNormalizedDateTime").asText(""));
-            
-        } catch (Exception e) {
-            logger.error("Error transforming message, returning empty structure", e);
-        }
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
-    }
-    private static void addNumericFieldSafely(ObjectNode target, JsonNode source, String parentField, String fieldName, double defaultValue) {
-        if (source.has(parentField)) {
-            JsonNode parentNode = source.get(parentField);
-            if (parentNode.has(fieldName) && !parentNode.get(fieldName).isNull()) {
-                JsonNode valueNode = parentNode.get(fieldName);
-                if (valueNode.isNumber()) {
-                    target.put(fieldName, valueNode.asDouble());
-                } else if (valueNode.isTextual()) {
-                    try {
-                        target.put(fieldName, Double.parseDouble(valueNode.asText()));
-                    } catch (NumberFormatException e) {
-                        target.put(fieldName, defaultValue);
-                    }
-                }
-            } else {
-                target.put(fieldName, defaultValue);
-            }
-        } else {
-            target.put(fieldName, defaultValue);
-        }
-    }
-    private static void addEmptyActionResult(ArrayNode array, String name) {
-    array.add(objectMapper.createObjectNode()
-        .put("Name", name)
-        .put("Value", ""));  
 }
     private static Map<String, Object> sendToService(String message) {
     Map<String, Object> result = new HashMap<>();
@@ -336,35 +257,76 @@ public class OfflineBatchScreening {
     }
     return result;
 }
-    private static void logResponses(List<Map<String, Object>> responses) {
+private static void logResponses(List<Map<String, Object>> responses) {
     try {
         logger.info("=== Transaction Responses ===");
         
-        ObjectMapper mapper = new ObjectMapper();
         int transactionCount = 1;
         
         for (Map<String, Object> response : responses) {
-            ObjectNode enhancedResponse = mapper.createObjectNode();
-            enhancedResponse.put("http_status", (Integer) response.get("status_code"));
+            ObjectNode formattedResponse = objectMapper.createObjectNode();
+            ObjectNode customOut = objectMapper.createObjectNode();
+            formattedResponse.set("customOut", customOut);
             
-            try {
-                JsonNode responseBody = mapper.readTree(response.get("body").toString());
-                enhancedResponse.set("api_response", responseBody);
-            } catch (Exception e) {
-                enhancedResponse.put("api_response", response.get("body").toString());
+            // Initialize action results with empty values
+            ArrayNode actionResults = objectMapper.createArrayNode();
+            
+            if (response.get("body") != null) {
+                try {
+                    JsonNode responseBody = objectMapper.readTree(response.get("body").toString());
+                    
+                    // If the response has the expected structure
+                    if (responseBody.has("customOut")) {
+                        JsonNode responseCustomOut = responseBody.get("customOut");
+                        
+                        // Copy all direct fields from customOut
+                        responseCustomOut.fields().forEachRemaining(entry -> {
+                            String fieldName = entry.getKey();
+                            JsonNode value = entry.getValue();
+                            
+                            if (!"actionResultsSet".equals(fieldName)) {
+                                customOut.set(fieldName, value);
+                            }
+                        });
+                        
+                        if (responseCustomOut.has("actionResultsSet")) {
+                            JsonNode actionResultsSet = responseCustomOut.get("actionResultsSet");
+                            if (actionResultsSet.has("actionResultsSet_InnerSet")) {
+                                JsonNode innerSet = actionResultsSet.get("actionResultsSet_InnerSet");
+                                if (innerSet.isArray()) {
+                                    for (JsonNode action : innerSet) {
+                                        actionResults.add(action);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // If response doesn't have customOut structure, try to map the entire body
+                        customOut.set("rawResponse", responseBody);
+                    }
+                } catch (Exception e) {
+                    logger.warn("Could not parse response body", e);
+                    customOut.put("error", "Failed to parse response");
+                }
+            } else {
+                customOut.put("error", "Empty response body");
             }
             
-            String formattedResponse = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(enhancedResponse);
+            ObjectNode actionResultsSet = objectMapper.createObjectNode();
+            actionResultsSet.set("actionResultsSet_InnerSet", actionResults);
+            customOut.set("actionResultsSet", actionResultsSet);
             
-            logger.info("Transaction {} response:\n{}", transactionCount++, formattedResponse);
+            String prettyResponse = objectMapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(formattedResponse);
+            
+            logger.info("Transaction {} response:\n{}", transactionCount++, prettyResponse);
         }
         
         logger.info("=== End of Transaction Responses ===");
     } catch (Exception e) {
         logger.error("Error logging responses: {}", e.getMessage(), e);
     }
-}
+}   
     private static void archiveFile(File file) {
         try {
             String archiveDir = config.OUTPUT_DIR + "archive/";
@@ -379,8 +341,13 @@ public class OfflineBatchScreening {
             logger.error("Error archiving file: " + e.getMessage(), e);
         }
     }
-    private static String decryptPassword(String encrypted) {
-       
-    return encrypted; 
+    public static String decryptedPass(String password) throws Exception {
+        Decryptor dec = new Decryptor();
+        if (password.isEmpty() || password.equals("null")) {
+            return "";
+        } else {
+            return dec.decrypt(password);
+        }
     }
+
 }
