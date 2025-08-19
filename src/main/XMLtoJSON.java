@@ -1,6 +1,5 @@
 package main;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,10 +18,6 @@ import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.FileAppender;
-import common.DatabaseLogger;
 import common.Logging;
 import common.PropertiesLoader;
 
@@ -32,66 +27,30 @@ public class XMLtoJSON {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) {
-        try {
-            
-//        String configFilePath = args[0];
-//        logger.info("Using config file: {}", configFilePath);
-//             File configFile = new File(configFilePath);
-//        if (!configFile.exists()) {
-//            logger.error("Config file not found at: {}", configFile.getAbsolutePath());
-//            System.exit(1);
-//        }
-            // Initialize properties and logging
-            // PropertiesLoader pl = new PropertiesLoader("src/main/resources/config.properties");
-//           if (args.length < 2) {
-//            // if (args.length < 1) {
-//            logger.error("Input validation failed: Requires XML string and config file path");
-//            System.exit(1);
-//        }
-//        
-           String xmlString = args[0];
-           String configFilePath = args[1];
-//             String configFilePath = args[0];
-//             String xmlString = """
-//                            <Response xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FF_bulkPaymentsResponseMessage_V1.xsd">
-//                            <BulkPayment detectionStatus="success" filename="bulkPaymentXML_170614.xml" transactionKey="111111" batchId="33333" logicalInputFileCreationDateTime="2014-06-17 09:04:00" logicalFileSequenceId="54536565" validEntriesCount="5" invalidEntriesCount="0" numberOfSuccessfullyDetectedEntries="5" numberOfFailedDetectedEntries="0">
-//                            <BulkPaymentTransactionIdentityFieldsList>
-//                            <TransactionIdentityField transactionIdentityFieldName="transactionKey" transactionIdentityFieldValue="111111"/>
-//                            </BulkPaymentTransactionIdentityFieldsList>
-//                            <BulkPaymentVersionIdentityFieldsList>
-//                            <VersionIdentityField versionIdentityFieldName="transactionKey" versionIdentityFieldValue="111111"/>
-//                            <VersionIdentityField versionIdentityFieldName="transactionNormalizedDateTime" versionIdentityFieldValue="2014-06-17 09:04:00"/>
-//                            </BulkPaymentVersionIdentityFieldsList>
-//                            <BulkPaymentActions isAlertGenerated="1" response="block">
-//                            <BulkPaymentAction bulkPaymentActionName="response" bulkPaymentActionValue="block"/>
-//                            <BulkPaymentAction bulkPaymentActionName="sendSMS" bulkPaymentActionValue="yes"/>
-//                            </BulkPaymentActions>
-//                            <BulkPaymentResults actimizeAnalyticsRiskScore="100" userAnalyticsScore=""/>
-//                            <EntriesResults maxActimizeTransactionRiskScore="100" maxUserAnalyticsScore=""/>
-//                            <EntriesActions mostSevereRiskLevel="High">
-//                            <EntryAction entryActionName="riskLevel" mostSevereValue="High"/>
-//                            <EntryAction entryActionName="sendSMS" mostSevereValue="yes"/>
-//                            </EntriesActions>
-//                            </BulkPayment>
-//                            </Response>""";
-//            logger.info("Input parameters validated");
-//            logger.debug("XML input length: {} characters", xmlString.length());
-
-            convertXmlToJson(xmlString, configFilePath);        
-//            logCompletionStats(startTime);
-        } catch (Exception e) {
-            logger.error("Initialization failed: {}", e.getMessage(), e);
+    try {
+        // Handle Error Case (3 arguments)
+        if (args.length == 3 && args[0].startsWith("ERROR")) {
+            generateErrorETLToJson(args[0], args[1], args[2]); // ERROR_MESSAGE, FILENAME, CONFIG_PATH
+        }else if (args.length == 2) {
+                convertXmlToJson(args[0], args[1]);
+            }
+        else {
+            logger.error("Invalid arguments. Expected:");
+            logger.error("1. Error Case (4 args): <BAT_PATH> <ERROR_MESSAGE> <FILENAME> <CONFIG_PATH>");
+            logger.error("2. Normal Case (2 args): <XML_STRING> <CONFIG_PATH>");
             System.exit(1);
         }
+    } catch (Exception e) {
+        logger.error("Initialization failed: {}", e.getMessage(), e);
+        System.exit(1);
     }
+}
     public static void convertXmlToJson(String xmlString, String configFilePath) {
         logger.info("Starting XML to JSON conversion");
         Logging logging = new Logging();
         try {
         PropertiesLoader pl = new PropertiesLoader(configFilePath);
         logging.configLog(pl, (ch.qos.logback.classic.Logger) logger, loggerContext);
-
-//            long startTime = System.currentTimeMillis();
             logger.info("----------------XML TO JSON CONVERSION STARTED----------------");
             logger.info("Process started at {}", dateFormat.format(new Date()));
 
@@ -199,25 +158,56 @@ public class XMLtoJSON {
             logger.error("Endpoint URL is not configured in properties file");
             throw new IllegalArgumentException("API endpoint URL is required");
         }
-            // postJsonToEndpoint(outputJson.toString(), pl.endpoint_URL);
-            postJsonToEndpoint(outputJson.toString(), pl.ENDPOINT_URL, pl);
-
-//            return outputJson;
-
+            postJsonToEndpoint(outputJson.toString(), pl.ENDPOINT_URL);
         } catch (JSONException e) {
             logger.error("XML parsing failed: {}", e.getMessage(), e);
-//            return null;
         } catch (Exception e) {
             logger.error("Unexpected error during conversion: {}", e.getMessage(), e);
-//            return null;
         }
     }
-    public static void postJsonToEndpoint(String jsonPayload,String endpointUrl, PropertiesLoader pl) {
-       logger.info("Initializing HTTP POST request to {}", endpointUrl);
-    //    logger.debug("Request payload size: {} bytes", jsonPayload.length());
-    //    logger.info("Converted JSON payload:\n{}", formatJson(jsonPayload));
+    public static void generateErrorETLToJson(String errorMessage, String fileName, String configFilePath) {
+    try {
+        PropertiesLoader pl = new PropertiesLoader(configFilePath);
+        JSONObject errorJson = new JSONObject()
+            .put("BulkPaymentActions", new JSONObject()
+                .put("BulkPaymentAction", new JSONArray()
+                    .put(new JSONObject()
+                        .put("bulkPaymentActionName", "")
+                        .put("bulkPaymentActionValue", "")))
+                .put("isAlertGenerated", "")
+                .put("response", ""))
+            .put("BulkPaymentResults", new JSONObject()
+                .put("actimizeAnalyticsRiskScore", "")
+                .put("userAnalyticsScore", ""))
+            .put("EntriesResults", new JSONObject()
+                .put("maxActimizeTransactionRiskScore", "")
+                .put("maxUserAnalyticsScore", ""))
+            .put("EntriesActions", new JSONObject()
+                .put("mostSevereRiskLevel", ""))
+            .put("batchId", "")
+            .put("transactionKey", "")
+            .put("detectionStatus", "")
+            .put("filename", fileName)
+            .put("logicalInputFileCreationDateTime", "")
+            .put("logicalFileSequenceId", "")
+            .put("invalidEntriesCount", "")
+            .put("validEntriesCount", "")
+            .put("numberOfFailedDetectedEntries", "")
+            .put("numberOfSuccessfullyDetectedEntries", "")
+            .put("transactionNormalizedDateTime", "")
+            .put("auditNo", new Random().nextInt(900000) + 100000)
+            .put("errorMessage", errorMessage);
 
-        try {
+        String endpointUrl = pl.ENDPOINT_URL;
+        postJsonToEndpoint(errorJson.toString(), endpointUrl);
+    } catch (Exception e) {
+        logger.error("Failed to generate error JSON", e);
+        throw new RuntimeException(e);
+    }
+}
+    public static void postJsonToEndpoint(String jsonPayload,String endpointUrl) {
+       logger.info("Initializing HTTP POST request to {}", endpointUrl);
+          try {
             HttpClient client = HttpClient.newBuilder()
                 // .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10))
@@ -233,10 +223,8 @@ public class XMLtoJSON {
                  HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         logger.info("HTTP Response received - Status Code: {}", response.statusCode());
-        logger.info("Response Body: {}", response.body()); // Add this line to log the response body
+        logger.info("Response Body: {}", response.body()); 
         logger.debug("Response Headers: {}", response.headers().map());
-        DatabaseLogger dbLogger = new DatabaseLogger(pl);
-        dbLogger.logStatusCode(String.valueOf(response.statusCode()), pl);
     } catch (IOException e) {
             logger.error("Network error occurred: {}", e.getMessage(), e);
         } catch (InterruptedException e) {
@@ -253,13 +241,13 @@ public class XMLtoJSON {
         System.out.println(jsonString);
     }
 }
-    private static void logCompletionStats(long startTime) {
-        long duration = System.currentTimeMillis() - startTime;
-        logger.info("Execution time: {} ms", duration);
-        logger.info("Memory used: {} MB", 
-            (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
-        logger.info("----------------PROCESS COMPLETED----------------");
-    }
+    // private static void logCompletionStats(long startTime) {
+    //     long duration = System.currentTimeMillis() - startTime;
+    //     logger.info("Execution time: {} ms", duration);
+    //     logger.info("Memory used: {} MB", 
+    //         (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+    //     logger.info("----------------PROCESS COMPLETED----------------");
+    // }
     private static String safeGetString(JSONObject obj, String key) {
     try {
         if (obj.has(key)) {
