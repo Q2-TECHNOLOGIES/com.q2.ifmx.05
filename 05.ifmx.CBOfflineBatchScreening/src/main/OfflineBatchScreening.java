@@ -7,16 +7,13 @@ import common.PropertiesLoader;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import javax.net.ssl.*;
-import java.security.*;
-import java.security.cert.*;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import org.slf4j.LoggerFactory;
-import com.jcraft.jsch.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -28,9 +25,7 @@ public class OfflineBatchScreening {
     public static final org.slf4j.Logger logger = loggerContext.getLogger("OfflineBatch");
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    private static int retryCount = 0;
-    
+    private static final SimpleDateFormat archiveDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");    
     public static void main(String[] args) {    
         try {
             String configPath = args[0];
@@ -47,10 +42,6 @@ public class OfflineBatchScreening {
             config = new PropertiesLoader(configFilePath);
             logging.configLog(config, (ch.qos.logback.classic.Logger) logger, loggerContext);
 
-            if (Integer.parseInt(config.IS_DOWNLOAD) == 1) {
-                downloadFilesFromSFTP(config);
-            }
-            
             processLocalFiles(config);
             logger.info("Process completed successfully.");
         } catch (Exception e) {
@@ -58,122 +49,81 @@ public class OfflineBatchScreening {
             System.exit(1);
         }
     }
-    private static void downloadFilesFromSFTP(PropertiesLoader pl) {
-        JSch jsch = new JSch();
-        Session session = null;
-        ChannelSftp channelSftp = null;
-        boolean error = false;
-        
-        try {
-            logger.info("Connecting to SFTP server...");
-            session = jsch.getSession(pl.SFTP_USER, pl.SFTP_HOST, Integer.parseInt(pl.SFTP_PORT));
-            
-            // Login with decrypted password
-            String decryptedPwd = decryptedPass(pl.SFTP_PASSWORD);
-            session.setPassword(decryptedPwd);
-            
-            // Avoid host key verification (not recommended for production)
-            Properties sftpConfig = new Properties();
-            sftpConfig.put("StrictHostKeyChecking", "no");
-            session.setConfig(sftpConfig);
-            
-            session.connect();
-            channelSftp = (ChannelSftp) session.openChannel("sftp");
-            channelSftp.connect();
-            
-            logger.info("Connected to SFTP server successfully");
-            
-            // Change to working directory
-            channelSftp.cd(pl.SFTP_DIRECTORY);
-            Vector<ChannelSftp.LsEntry> files = channelSftp.ls("*");
-            
-            if (files != null && files.size() > 0) {
-                logger.info("Found " + files.size() + " files to download");
-                
-                for (ChannelSftp.LsEntry entry : files) {
-                    if (!entry.getAttrs().isDir()) {
-                        downloadSingleFile(channelSftp, entry.getFilename(), pl);
-                    }
-                }
-            } else {
-                logger.info("No files found on SFTP server");
-            }
-            
-        } catch (Exception e) {
-            error = true;
-            logger.error("SFTP error: " + e.getMessage());
-            
-            // Retry logic
-            if (retryCount < Integer.parseInt(pl.MAX_RETRY)) {
-                retryCount++;
-                logger.info("Retrying connection (attempt " + retryCount + ")...");
-                
-                try {
-                    TimeUnit.SECONDS.sleep(Integer.parseInt(pl.RETRY_DELAY_SECONDS));
-                    downloadFilesFromSFTP(pl);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-            } else {
-                logger.error("Max retry attempts reached. Exiting...");
-                System.exit(1);
-            }
-        } finally {
-            if (channelSftp != null) {
-                channelSftp.disconnect();
-            }
-            if (session != null) {
-                session.disconnect();
-            }
-            
-            if (error && retryCount >= Integer.parseInt(pl.MAX_RETRY)) {
-                System.exit(1);
-            }
-        }
-    }
-    private static void downloadSingleFile(ChannelSftp channelSftp, String filename, PropertiesLoader pl) throws Exception {
-        String localPath = pl.INPUT_DIR + filename;
-        // File localFile = new File(localPath);
-        
-        try {
-            channelSftp.get(filename, localPath);
-            logger.info("Downloaded file: " + filename);
-            
-            // Delete from SFTP if configured
-            if (Integer.parseInt(pl.IS_DELETE_AFTER_DOWNLOAD) == 1) {
-                channelSftp.rm(filename);
-                logger.info("Deleted remote file: " + filename);
-            }
-        } catch (Exception e) {
-            logger.error("Failed to download file: " + filename, e);
-            throw e;
-        }
-    }
     private static void processSingleFile(File file) {
-        try {
-            logger.info("Processing file: " + file.getName());
-            String fileContent = new String(Files.readAllBytes(file.toPath()));
-            
-            String[] transactions = fileContent.split(Pattern.quote(config.TRANSACTION_DELIMITER));
-        List<Map<String, Object>> allResponses = new ArrayList<>(); 
-
-            for (String transaction : transactions) {
-                if (transaction.trim().isEmpty()) continue;
-                Map<String, Object> serviceResponse = sendToService(transaction);
-                allResponses.add(serviceResponse);
-            }
-            if (!allResponses.isEmpty()) {
-                logResponses(allResponses); 
-            }
+    try {
+        logger.info("Processing file: " + file.getName());
+        String fileContent = new String(Files.readAllBytes(file.toPath()));
         
+        String[] transactions = fileContent.split(Pattern.quote(config.TRANSACTION_DELIMITER));
+        List<Map<String, Object>> allResponses = new ArrayList<>();
+        boolean hasInvalidTransaction = false;
+
+        // **CEK DULU semua transaksi sebelum kirim ke API**
+        for (String transaction : transactions) {
+            if (transaction.trim().isEmpty()) continue;
             
-            // Archive the file
-            archiveFile(file);
-            
-        } catch (Exception e) {
-            logger.error("Error processing file: " + file.getName(), e);
+            if (!isValidContent(transaction)) {
+                logger.warn("Invalid transaction found: {}", 
+                    transaction.substring(0, Math.min(50, transaction.length())));
+                hasInvalidTransaction = true;
+                break; // **Stop checking, file sudah invalid**
+            }
         }
+
+        // **Jika ada yang invalid, langsung pindah ke error folder**
+        if (hasInvalidTransaction) {
+            logger.warn("File contains invalid transactions - moving to error folder without API calls");
+            moveToErrorFolder(file);
+            return;
+        }
+
+        // **Hanya jika semua valid, baru kirim ke API**
+        for (String transaction : transactions) {
+            if (transaction.trim().isEmpty()) continue;
+            
+            Map<String, Object> serviceResponse = sendToService(transaction);
+            allResponses.add(serviceResponse);
+        }
+        
+        if (!allResponses.isEmpty()) {
+            logResponses(allResponses);
+        }
+        
+        archiveFile(file);
+        
+    } catch (Exception e) {
+        logger.error("Error processing file: " + file.getName(), e);
+        moveToErrorFolder(file);
     }
+}
+    private static boolean isValidContent(String content) {
+    if (config.CONTENT_START_PATTERN == null || config.CONTENT_START_PATTERN.isEmpty()) {
+        return true;
+    }
+    
+    try {
+        Pattern pattern = Pattern.compile(config.CONTENT_START_PATTERN);
+        return pattern.matcher(content).find();
+        
+    } catch (Exception e) {
+        logger.error("Content validation error with pattern: {}", config.CONTENT_START_PATTERN, e);
+        return false;
+    }
+}
+    private static void moveToErrorFolder(File file) {
+    try {
+        String errorDir = config.ERROR_DIR;
+        Path errorPath = Paths.get(errorDir);
+        if (!Files.exists(errorPath)) {
+            Files.createDirectories(errorPath);
+        }        
+        Path destination = errorPath.resolve(file.getName());
+        Files.move(file.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+        logger.info("Moved errored file to: {}", destination);
+    } catch (Exception e) {
+        logger.error("Failed to move errored file {}: {}", file.getName(), e.getMessage(), e);
+    }
+}
     private static void processLocalFiles(PropertiesLoader pl) {
         File dir = new File(pl.INPUT_DIR);
         File[] files = dir.listFiles();
@@ -257,7 +207,7 @@ public class OfflineBatchScreening {
     }
     return result;
 }
-private static void logResponses(List<Map<String, Object>> responses) {
+    private static void logResponses(List<Map<String, Object>> responses) {
     try {
         logger.info("=== Transaction Responses ===");
         
@@ -328,26 +278,31 @@ private static void logResponses(List<Map<String, Object>> responses) {
     }
 }   
     private static void archiveFile(File file) {
-        try {
-            String archiveDir = config.OUTPUT_DIR + "archive/";
-            Files.createDirectories(Paths.get(archiveDir));
+    try {
+        String timestamp = archiveDateFormat.format(new Date());
+        String archiveDir = config.OUTPUT_DIR + "archive/";
+        String zipFileName = archiveDir + file.getName() + "_" + timestamp + ".zip";
+        
+        Files.createDirectories(Paths.get(archiveDir));
+        
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFileName));
+             FileInputStream fis = new FileInputStream(file)) {
             
-            Path source = file.toPath();
-            Path target = Paths.get(archiveDir + file.getName());
+            ZipEntry zipEntry = new ZipEntry(file.getName());
+            zos.putNextEntry(zipEntry);
             
-            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-            logger.info("Archived file: " + file.getName());
-        } catch (Exception e) {
-            logger.error("Error archiving file: " + e.getMessage(), e);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, len);
+            }
+            zos.closeEntry();
         }
+        
+        Files.delete(file.toPath());
+        logger.info("Archived file: {} to {}", file.getName(), zipFileName);
+    } catch (Exception e) {
+        logger.error("Error archiving file: " + e.getMessage(), e);
     }
-    public static String decryptedPass(String password) throws Exception {
-        Decryptor dec = new Decryptor();
-        if (password.isEmpty() || password.equals("null")) {
-            return "";
-        } else {
-            return dec.decrypt(password);
-        }
-    }
-
 }
+   }
