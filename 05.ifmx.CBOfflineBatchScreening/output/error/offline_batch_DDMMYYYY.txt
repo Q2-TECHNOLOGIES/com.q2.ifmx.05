@@ -108,7 +108,7 @@
 }
 ~||~
 {
-  "generic": {
+  "gener": {
     "baseTransactionA": {
       "channel": "WEB",
       "partyKey": "ii001221439",

@@ -52,6 +52,7 @@ public class OfflineBatchScreening {
     private static void processSingleFile(File file) {
     try {
         logger.info("Processing file: " + file.getName());
+        logger.info("Using pattern: {}", config.CONTENT_START_PATTERN); 
         String fileContent = new String(Files.readAllBytes(file.toPath()));
         
         String[] transactions = fileContent.split(Pattern.quote(config.TRANSACTION_DELIMITER));
@@ -103,7 +104,14 @@ public class OfflineBatchScreening {
     
     try {
         Pattern pattern = Pattern.compile(config.CONTENT_START_PATTERN);
-        return pattern.matcher(content).find();
+        boolean matches = pattern.matcher(content).find();
+        
+        // DEBUG LOGGING
+        logger.debug("Pattern: {}", config.CONTENT_START_PATTERN);
+        logger.debug("Content start: {}", content.substring(0, Math.min(100, content.length())));
+        logger.debug("Pattern matches: {}", matches);
+        
+        return matches;
         
     } catch (Exception e) {
         logger.error("Content validation error with pattern: {}", config.CONTENT_START_PATTERN, e);
