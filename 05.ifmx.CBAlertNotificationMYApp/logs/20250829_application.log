@@ -1,0 +1,286 @@
+2025-08-29 14:08:37-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 14:08:37-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 14:08:38-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Grouped into 2 CWI groups
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056802 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 14:08:38-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056802
+2025-08-29 14:08:41-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 14:08:41-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 14:08:41-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 14:08:41
+2025-08-29 14:08:41-INFO -EmailSenderApp:ALERT CWI : CWI_0000056802
+2025-08-29 14:08:41-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 14:08:41-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056802: SUCCESS
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 1
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056804 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 14:08:41-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056804
+2025-08-29 14:08:43-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 14:08:43-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 14:08:43-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 14:08:43
+2025-08-29 14:08:43-INFO -EmailSenderApp:ALERT CWI : CWI_0000056804
+2025-08-29 14:08:43-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 14:08:43-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 14:08:43-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056804: SUCCESS
+2025-08-29 14:08:43-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 14:08:43-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 14:08:43-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 0
+2025-08-29 14:08:43-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 14:11:56-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 14:11:56-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 14:11:57-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 14:11:57-INFO -CIMBAlertNotificationApp:Grouped into 2 CWI groups
+2025-08-29 14:11:57-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056802 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 14:11:57-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 14:11:57-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 14:11:57-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 14:11:57-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056802
+2025-08-29 14:12:00-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 14:12:00-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 14:12:00-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 14:12:00
+2025-08-29 14:12:00-INFO -EmailSenderApp:ALERT CWI : CWI_0000056802
+2025-08-29 14:12:00-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 14:12:00-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056802: SUCCESS
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 1
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056804 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 14:12:00-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056804
+2025-08-29 14:12:02-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 14:12:02-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 14:12:02-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 14:12:02
+2025-08-29 14:12:02-INFO -EmailSenderApp:ALERT CWI : CWI_0000056804
+2025-08-29 14:12:02-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 14:12:02-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 14:12:02-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056804: SUCCESS
+2025-08-29 14:12:02-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 14:12:02-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 14:12:02-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 0
+2025-08-29 14:12:02-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 19:45:27-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 19:45:27-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 19:45:27-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 19:45:28-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 19:45:28-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 19:45:28-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 19:45:28-INFO -CIMBAlertNotificationApp:Table Partition Found = 
+2025-08-29 19:45:28-ERROR-CIMBAlertNotificationApp:No partitions found, exiting...
+2025-08-29 19:45:41-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 19:45:41-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 19:45:51-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 19:45:51-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 19:45:52-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 19:45:52-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 19:45:52-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 19:45:52-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 19:45:52-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 19:45:52-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 19:45:52-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 19:45:52-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 19:45:53-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 19:45:53-INFO -CIMBAlertNotificationApp:Grouped into 0 CWI groups
+2025-08-29 19:47:05-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 19:47:05-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 19:47:06-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Grouped into 2 CWI groups
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056802 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 19:47:06-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 19:47:07-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 19:47:07-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056802
+2025-08-29 19:47:14-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 19:47:14-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 19:47:14-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 19:47:14
+2025-08-29 19:47:14-INFO -EmailSenderApp:ALERT CWI : CWI_0000056802
+2025-08-29 19:47:14-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 19:47:14-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056802: SUCCESS
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 1
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056804 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 19:47:14-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056804
+2025-08-29 19:47:16-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 19:47:16-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 19:47:16-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 19:47:16
+2025-08-29 19:47:16-INFO -EmailSenderApp:ALERT CWI : CWI_0000056804
+2025-08-29 19:47:16-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 19:47:16-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 19:47:16-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056804: SUCCESS
+2025-08-29 19:47:16-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 19:47:16-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 19:47:16-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 0
+2025-08-29 19:47:16-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:02:01-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 20:02:01-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 20:02:02-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Grouped into 2 CWI groups
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056802 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 20:02:02-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 20:02:03-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 20:02:03-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056802
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056802: FAILED
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 1
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056804 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056804
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056804: FAILED
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 1
+2025-08-29 20:02:14-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 20:02:41-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 20:02:41-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 20:02:42-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 20:02:42-INFO -CIMBAlertNotificationApp:Grouped into 0 CWI groups
+2025-08-29 20:10:06-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 20:10:06-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 20:10:07-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Grouped into 2 CWI groups
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056802 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 20:10:07-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 20:10:08-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 20:10:08-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056802
+2025-08-29 20:10:11-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 20:10:11-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 20:10:11-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 20:10:11
+2025-08-29 20:10:11-INFO -EmailSenderApp:ALERT CWI : CWI_0000056802
+2025-08-29 20:10:11-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 20:10:11-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056802: SUCCESS
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 1
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056804 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 20:10:11-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056804
+2025-08-29 20:10:14-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 20:10:14-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 20:10:14-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 20:10:14
+2025-08-29 20:10:14-INFO -EmailSenderApp:ALERT CWI : CWI_0000056804
+2025-08-29 20:10:14-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 20:10:14-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 20:10:14-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056804: SUCCESS
+2025-08-29 20:10:14-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:10:14-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:10:14-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 0
+2025-08-29 20:10:14-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:11:32-INFO -CIMBAlertNotificationApp:Logging configured to: Z:\Zulfah\Work\Q2\Client\CIMB MY\02062025\AlertNotifApp\logs\20250829_application.log
+2025-08-29 20:11:32-INFO -CIMBAlertNotificationApp:Loaded properties - DB: 192.168.181.128:5432/actimize
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Start running query for get partition number in actone.impl_trx_tbl_partitions
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Finish running query for get partition number in impl_trx_tbl_partitions
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Start running query for get partitions from idb_data_user.ff_all_transactions
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Finish running query for get partitions from ff_all_transactions
+2025-08-29 20:11:33-WARN -CIMBAlertNotificationApp:Partition is empty, using dummy for testing
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Table Partition Found = 18
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Successfully connected to database: actimize
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:MAIN QUERY: SELECT aa.item_id AS CWI, alstat.status_name AS STATUS_ID, trx.*, c.* FROM ACTONE.v_items_parent_child_relations aa JOIN ACTONE.alerts ab ON aa.child_id = ab.alert_id JOIN IDB_DATA_USER.ff_all_transactions trx      ON ab.p50 = trx.ACTIMIZE_TRANSACTION_IDENTITY      AND EXTRACT(DAY FROM trx.TRX_NORMALIZED_DATETIME) IN (18) JOIN IDB_DATA_USER.IMPL_EMAIL_ALERT_NOTIFICATION c      ON c.TRX_DATE::date = trx.TRX_NORMALIZED_DATETIME::date      AND c.PARTY_ID = trx.PARTY_KEY::text JOIN ACTONE.alerts ac ON aa.item_id = ac.alert_id JOIN ACTONE.acm_md_alert_statuses alstat      ON alstat.status_internal_id = ac.status_internal_id WHERE c.SEND_STATUS::int = 0 AND c.SEND_COUNT::int < 4 ORDER BY aa.item_id
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Main query executed successfully
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Grouped into 2 CWI groups
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056802 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 20:11:33-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056802
+2025-08-29 20:11:36-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 20:11:36-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 20:11:36-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 20:11:36
+2025-08-29 20:11:36-INFO -EmailSenderApp:ALERT CWI : CWI_0000056802
+2025-08-29 20:11:36-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 20:11:36-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 20:11:36-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056802: SUCCESS
+2025-08-29 20:11:36-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:11:36-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 0
+2025-08-29 20:11:36-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 1
+2025-08-29 20:11:36-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:11:36-INFO -CIMBAlertNotificationApp:Processing CWI: CWI_0000056804 with 1 alerts, Status: IFM - Automatic Closure
+2025-08-29 20:11:36-INFO -CIMBAlertNotificationApp:Recipients for status 'IFM - Automatic Closure': [zzulfahf@gmail.com]
+2025-08-29 20:11:37-INFO -CIMBAlertNotificationApp:Start running query for checking if eligible to send EMAIL
+2025-08-29 20:11:37-INFO -CIMBAlertNotificationApp:Finish running query for checking if eligible to send EMAIL. Notification will be send
+2025-08-29 20:11:37-INFO -CIMBAlertNotificationApp:Eligible to send notification for CWI: CWI_0000056804
+2025-08-29 20:11:39-INFO -EmailSenderApp:######EMAIL NOTIFICATION######
+2025-08-29 20:11:39-INFO -EmailSenderApp:EMAIL SENT TO : zzulfahf@gmail.com;
+2025-08-29 20:11:39-INFO -EmailSenderApp:TIMESTAMP : 29/08/2025 20:11:39
+2025-08-29 20:11:39-INFO -EmailSenderApp:ALERT CWI : CWI_0000056804
+2025-08-29 20:11:39-INFO -EmailSenderApp:STATUS : EMAIL SENT
+2025-08-29 20:11:39-INFO -EmailSenderApp:######END OF EMAIL NOTIFICATION######
+2025-08-29 20:11:39-INFO -CIMBAlertNotificationApp:Email send result for CWI CWI_0000056804: SUCCESS
+2025-08-29 20:11:39-INFO -CIMBAlertNotificationApp:Original status before email send - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:11:39-INFO -CIMBAlertNotificationApp:Before update - trx_key: 20250317-5default, SEND_STATUS: 1
+2025-08-29 20:11:39-INFO -CIMBAlertNotificationApp:Executed update statement for 1 alerts, changed rows: 0
+2025-08-29 20:11:39-INFO -CIMBAlertNotificationApp:After update - trx_key: 20250317-5default, SEND_STATUS: 1

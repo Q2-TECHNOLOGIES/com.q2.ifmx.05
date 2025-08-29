@@ -1,1 +1,0 @@
-Contains logic to send email notification if there is an alert generated
