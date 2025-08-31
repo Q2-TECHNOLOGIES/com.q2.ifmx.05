@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,17 +28,23 @@ public class XMLtoJSON {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) {
-    try {
+     try {
         // Handle Error Case (3 arguments)
         if (args.length == 3 && args[0].startsWith("ERROR")) {
             generateErrorETLToJson(args[0], args[1], args[2]); // ERROR_MESSAGE, FILENAME, CONFIG_PATH
-        }else if (args.length == 2) {
-                convertXmlToJson(args[0], args[1]);
-            }
+        } 
+        // Handle Actimize Error Case (2 arguments with ERROR_ACTIMIZE)
+        else if (args.length == 2 && args[0].startsWith("ERROR_ACTIMIZE")) {
+            convertErrorActimizeToJson(args[0], args[1]); // ERROR_MESSAGE, CONFIG_PATH
+        }
+        else if (args.length == 2) {
+            convertXmlToJson(args[0], args[1]);
+        }
         else {
             logger.error("Invalid arguments. Expected:");
-            logger.error("1. Error Case (4 args): <BAT_PATH> <ERROR_MESSAGE> <FILENAME> <CONFIG_PATH>");
-            logger.error("2. Normal Case (2 args): <XML_STRING> <CONFIG_PATH>");
+            logger.error("1. Error Case (3 args): ERROR_MESSAGE FILENAME CONFIG_PATH");
+            logger.error("2. Actimize Error Case (2 args): ERROR_ACTIMIZE_MESSAGE CONFIG_PATH");
+            logger.error("3. Normal Case (2 args): XML_STRING CONFIG_PATH");
             System.exit(1);
         }
     } catch (Exception e) {
@@ -163,6 +170,57 @@ public class XMLtoJSON {
             logger.error("XML parsing failed: {}", e.getMessage(), e);
         } catch (Exception e) {
             logger.error("Unexpected error during conversion: {}", e.getMessage(), e);
+        }
+    }
+    public static void convertErrorActimizeToJson(String errorMessage, String configFilePath) {
+        Pattern pattern = Pattern.compile("actimizeInputFileName=\\[(.*?)\\]");
+        Matcher matcher = pattern.matcher(errorMessage);
+
+        String fileName = "";
+        if (matcher.find()) {
+            fileName = matcher.group(1); 
+            if (fileName.contains("xml")) {
+                fileName = fileName.replace("xml", "csv");
+            }
+        }
+
+        try {
+            PropertiesLoader pl = new PropertiesLoader(configFilePath);
+            JSONObject errorJson = new JSONObject()
+                .put("BulkPaymentActions", new JSONObject()
+                    .put("BulkPaymentAction", new JSONArray()
+                        .put(new JSONObject()
+                            .put("bulkPaymentActionName", "")
+                            .put("bulkPaymentActionValue", "")))
+                    .put("isAlertGenerated", "")
+                    .put("response", ""))
+                .put("BulkPaymentResults", new JSONObject()
+                    .put("actimizeAnalyticsRiskScore", "")
+                    .put("userAnalyticsScore", ""))
+                .put("EntriesResults", new JSONObject()
+                    .put("maxActimizeTransactionRiskScore", "")
+                    .put("maxUserAnalyticsScore", ""))
+                .put("EntriesActions", new JSONObject()
+                    .put("mostSevereRiskLevel", ""))
+                .put("batchId", "")
+                .put("transactionKey", "")
+                .put("detectionStatus", "")
+                .put("filename", fileName)
+                .put("logicalInputFileCreationDateTime", "")
+                .put("logicalFileSequenceId", "")
+                .put("invalidEntriesCount", "")
+                .put("validEntriesCount", "")
+                .put("numberOfFailedDetectedEntries", "")
+                .put("numberOfSuccessfullyDetectedEntries", "")
+                .put("transactionNormalizedDateTime", "")
+                .put("auditNo", new Random().nextInt(900000) + 100000)
+                .put("errorMessage", errorMessage);
+
+            String endpointUrl = pl.ENDPOINT_URL;
+            postJsonToEndpoint(errorJson.toString(), endpointUrl);
+        } catch (Exception e) {
+            logger.error("Failed to generate error JSON from ", e);
+            throw new RuntimeException(e);
         }
     }
     public static void generateErrorETLToJson(String errorMessage, String fileName, String configFilePath) {
