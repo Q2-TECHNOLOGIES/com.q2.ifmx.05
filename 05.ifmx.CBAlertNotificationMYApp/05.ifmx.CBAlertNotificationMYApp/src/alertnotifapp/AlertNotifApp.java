@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.sql.Connection;
@@ -149,6 +151,7 @@ public class AlertNotifApp {
 
                 PreparedStatement stmt = conn.prepareStatement(query);
                 stmt.setString(1, bu);
+                stmt.setString(2, listIdentifier);
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
@@ -388,26 +391,26 @@ public class AlertNotifApp {
         logger.info("Grouped into " + alertsByCwi.size() + " CWI groups");
 
         MessageBuilder mb = new MessageBuilder(pl, conn);
-
-        // Loop per CWI (mirip reference)
+        // Loop per CWI 
         for (Map.Entry<String, List<MessageContent>> entry : alertsByCwi.entrySet()) {
             String cwi = entry.getKey();
             List<MessageContent> listMessage = entry.getValue();
             String status = statusByCwi.get(cwi);
             logger.info("Processing CWI: " + cwi + " with " + listMessage.size() + " alerts, Status: " + status);
 
-        ArrayList<String> recipients = new ArrayList<>();
+            Set<String> recipientsSet = new LinkedHashSet<>();
             for (MessageContent msg : listMessage) {
-                String rec = msg.getRecipients(); // 
+                String rec = msg.getRecipients();
                 if (rec != null && !rec.isEmpty()) {
-                    // split kalau multiple recipients dipisah ;
                     for (String r : rec.split(";")) {
-                        if (!r.trim().isEmpty()) recipients.add(r.trim());
+                        if (!r.trim().isEmpty()) {
+                            recipientsSet.add(r.trim());
+                        }
                     }
                 }
             }
+            ArrayList<String> recipients = new ArrayList<>(recipientsSet);
             logger.info("Recipients for status '" + status + "': " + recipients);
-
 
             if (recipients.isEmpty()) continue;
 
