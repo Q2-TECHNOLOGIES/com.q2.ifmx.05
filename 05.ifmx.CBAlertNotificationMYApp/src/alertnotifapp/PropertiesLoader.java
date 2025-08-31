@@ -18,8 +18,6 @@ public class PropertiesLoader {
     public final String db_username;
     public final String db_password;
         
-    // IDB database properties
-    public final String db_idb_name;
     // Email properties
     public final String email_username;
     public final String email_password;
@@ -30,11 +28,10 @@ public class PropertiesLoader {
     public final String alert_ready_step_id;
     public final String alert_assigned_status_id;
     public final String bu_assigned_alert;
-    public final int max_retry_count;
 
     public final String list_identifier_email; 
-    public final String LOG_FILE_DIR;
-    public final String FILE_LOG_NAME;
+    public final String log_file_dir;
+    public final String file_log_name;
     
 
     
@@ -57,18 +54,16 @@ public class PropertiesLoader {
             throw new RuntimeException("Failed to initialize Decryptor", e);
         }
         // Database Configuration
-        db_host = prop.getProperty("db_host");
-        db_port = prop.getProperty("db_port");  
-        db_name = prop.getProperty("db_name");
-        db_username = prop.getProperty("db_username");
-        db_password = decryptor.decrypt(prop.getProperty("db_password")); // Decrypt here
-        db_idb_name = prop.getProperty("db_idb_name", db_name);  
-        
+        db_host = prop.getProperty("DB_HOST");
+        db_port = prop.getProperty("DB_PORT");  
+        db_name = prop.getProperty("DB_NAME");
+        db_username = prop.getProperty("DB_USERNAME");
+        db_password = decryptor.decrypt(prop.getProperty("DB_PASSWORD")); // Decrypt        
             // Email Configuration
-        email_username = prop.getProperty("email.username");
-        email_password = decryptor.decrypt(prop.getProperty("email.password")); // Decrypt here
-        smtp_host = prop.getProperty("smtp.host");
-        smtp_port = prop.getProperty("smtp.port");
+        email_username = prop.getProperty("EMAIL_USERNAME");
+        email_password = decryptor.decrypt(prop.getProperty("EMAIL_PASSWORD")); // Decrypt
+        smtp_host = prop.getProperty("SMTP_HOST");
+        smtp_port = prop.getProperty("SMTP_PORT");
         email_group_recipient = prop.getProperty("EMAIL_GROUP_RECIPIENT");
         
         // Initialize response mapping
@@ -82,11 +77,8 @@ public class PropertiesLoader {
         alert_assigned_status_id = prop.getProperty("ALERT_ASSIGNED_STATUS_ID");
         bu_assigned_alert = prop.getProperty("BU_ASSIGNED_ALERT");
         list_identifier_email = prop.getProperty("LIST_IDENTIFIER_EMAIL");
-            
-        // Application Settings
-        max_retry_count = Integer.parseInt(prop.getProperty("max.retry.count", "3"));
 
-        LOG_FILE_DIR = prop.getProperty("LOG_FILE_DIR", "");
-        FILE_LOG_NAME = prop.getProperty("FILE_LOG_NAME", "application");
+        log_file_dir = prop.getProperty("LOG_FILE_DIR");
+        file_log_name = prop.getProperty("FILE_LOG_NAME");
     }
 }

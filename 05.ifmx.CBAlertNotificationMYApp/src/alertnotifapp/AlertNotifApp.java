@@ -20,7 +20,7 @@ import alertnotifapp.model.EmailObject;
 import alertnotifapp.model.MessageBuilder;
 import alertnotifapp.model.MessageContent;
 import ch.qos.logback.classic.LoggerContext;
-import alertnotifapp.common.Logging; // Import kelas Logging
+import alertnotifapp.common.Logging; 
 import ch.qos.logback.classic.Logger;
 
 public class AlertNotifApp {
@@ -41,12 +41,10 @@ public class AlertNotifApp {
     }
     public static String getDBPartitionKey(PropertiesLoader pl) {
     String partitions = "";
-    Connection idbConn = getDBConnection(pl.db_host, pl.db_port, pl.db_idb_name,
-                                        pl.db_username, pl.db_password);
-    Connection rcmConn = getDBConnection(pl.db_host, pl.db_port, pl.db_name,
+    Connection conn = getDBConnection(pl.db_host, pl.db_port, pl.db_name,
                                          pl.db_username, pl.db_password);
 
-    if (idbConn == null || rcmConn == null) {
+    if (conn == null) {
         logger.error("Failed to establish database connections for partition keys");
         return partitions;
     }
@@ -58,7 +56,7 @@ public class AlertNotifApp {
             "FROM actone.impl_trx_tbl_partitions " +
             "WHERE trx_date = CURRENT_DATE";
 
-        Statement stmt = rcmConn.createStatement();
+        Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(queryCheckPartition);
         logger.info("Finish running query for get partition number in impl_trx_tbl_partitions");
 
@@ -83,7 +81,7 @@ public class AlertNotifApp {
             ") " +
             "ORDER BY child.relname";
 
-        stmt = idbConn.createStatement();
+        stmt = conn.createStatement();
         rs = stmt.executeQuery(query);
 
         StringBuilder partitionBuilder = new StringBuilder();
@@ -103,7 +101,7 @@ public class AlertNotifApp {
             String queryInsertPartition =
                 "INSERT INTO actone.impl_trx_tbl_partitions (trx_date, partition_number) " +
                 "VALUES (CURRENT_DATE, ?)";
-            try (PreparedStatement pstmt = rcmConn.prepareStatement(queryInsertPartition)) {
+            try (PreparedStatement pstmt = conn.prepareStatement(queryInsertPartition)) {
                 pstmt.setString(1, partitions);
                 int result = pstmt.executeUpdate();
                 logger.info("Inserted partition record: " + result);
@@ -114,8 +112,7 @@ public class AlertNotifApp {
         logger.error("Error when retrieving partition number: " + e.getMessage());
     } finally {
         try {
-            if (idbConn != null) idbConn.close();
-            if (rcmConn != null) rcmConn.close();
+            if (conn != null) conn.close();
         } catch (SQLException e) {
             logger.error("Error closing connections: " + e.getMessage());
         }
@@ -170,7 +167,7 @@ public class AlertNotifApp {
     public static boolean isSendNotification(String status, PropertiesLoader pl, String cwi, String table, 
                                        String recipient, String filter_lastDate, String filter_currDate, 
                                        String partitions) {
-    Connection conn = getDBConnection(pl.db_host, pl.db_port, pl.db_idb_name, 
+    Connection conn = getDBConnection(pl.db_host, pl.db_port, pl.db_name, 
                                     pl.db_username, pl.db_password);
     if (conn != null) {
         try {
@@ -214,7 +211,7 @@ public class AlertNotifApp {
                     "FROM idb_data_user.impl_email_template " + // UBAH SCHEMA DI SINI
                     "WHERE type = ? LIMIT 1";
 
-        try (Connection conn = getDBConnection(pl.db_host, pl.db_port, pl.db_idb_name, // GUNAKAN IDB CONNECTION
+        try (Connection conn = getDBConnection(pl.db_host, pl.db_port, pl.db_name, 
                                             pl.db_username, pl.db_password);
             PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -321,6 +318,7 @@ public class AlertNotifApp {
         logging.configLog(pl, logger, loggerContext);    logger.info("Loaded properties - DB: " + pl.db_host + ":" + pl.db_port + "/" + pl.db_name);
 
     String partitions = getDBPartitionKey(pl);
+    //error disini
     logger.info("Table Partition Found = " + partitions);
 
     if (partitions.isEmpty()) {
@@ -328,9 +326,8 @@ public class AlertNotifApp {
         return;
     }
 
-    Connection idb_conn = getDBConnection(pl.db_host, pl.db_port, pl.db_idb_name, pl.db_username, pl.db_password);
-    Connection rcm_conn = getDBConnection(pl.db_host, pl.db_port, pl.db_name, pl.db_username, pl.db_password);
-    if (idb_conn == null || rcm_conn == null) {
+    Connection conn = getDBConnection(pl.db_host, pl.db_port, pl.db_name, pl.db_username, pl.db_password);
+    if (conn == null) {
         logger.error("Failed to establish database connection");
         System.exit(1);
     }
@@ -357,7 +354,7 @@ public class AlertNotifApp {
                        "ORDER BY aa.item_id";
 
         logger.info("MAIN QUERY: " + query);     
-        Statement stmt = idb_conn.createStatement();
+        Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         logger.info("Main query executed successfully");
 
@@ -390,7 +387,7 @@ public class AlertNotifApp {
         
         logger.info("Grouped into " + alertsByCwi.size() + " CWI groups");
 
-        MessageBuilder mb = new MessageBuilder(pl, rcm_conn);
+        MessageBuilder mb = new MessageBuilder(pl, conn);
 
         // Loop per CWI (mirip reference)
         for (Map.Entry<String, List<MessageContent>> entry : alertsByCwi.entrySet()) {
@@ -438,14 +435,13 @@ public class AlertNotifApp {
 
             logger.info("Email send result for CWI " + cwi + ": " + (sendResult ? "SUCCESS" : "FAILED"));
             // Update status semua trx_key untuk CWI ini
-            updateAlertStatus(rcm_conn, listMessage, sendResult, recipients);
+            updateAlertStatus(conn, listMessage, sendResult, recipients);
         }
 
     } catch (Exception e) {
         logger.error("Unexpected error: " + e.getMessage(), e);
     } finally {
-        try { if (rcm_conn != null) rcm_conn.close(); } catch (SQLException ignored) {}
-        try { if (idb_conn != null) idb_conn.close(); } catch (SQLException ignored) {}
+        try { if (conn != null) conn.close(); } catch (SQLException ignored) {}
     }
 }
 }
